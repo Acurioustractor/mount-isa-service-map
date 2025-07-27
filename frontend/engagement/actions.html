@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Action Items - Mount Isa Service Map</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .action-card {
+            border-left: 4px solid #0d6efd;
+            transition: transform 0.2s;
+        }
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .status-proposed { background-color: #6c757d; color: white; }
+        .status-in-progress { background-color: #ffc107; color: black; }
+        .status-completed { background-color: #28a745; color: white; }
+        .status-delayed { background-color: #dc3545; color: white; }
+        .filter-sidebar {
+            background-color: #f8f9fa;
+            border-radius: 0.375rem;
+            padding: 1rem;
+        }
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 20px;
+        }
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #0d6efd;
+        }
+        .timeline-item:after {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 20px;
+            width: 2px;
+            height: calc(100% + 5px);
+            background-color: #dee2e6;
+        }
+        .timeline-item:last-child:after {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-primary text-white py-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-5 fw-bold mb-2">Action Items</h1>
+                    <p class="lead mb-0">Mount Isa Service Map - Tracking Responses to Community Needs</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <button class="btn btn-light btn-lg">
+                        <i class="bi bi-person-circle me-2"></i>Admin
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="bi bi-people me-2"></i>Community Engagement
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#engagementNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="engagementNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="recorder.html">
+                            <i class="bi bi-mic me-1"></i>Record Interview
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="gaps.html">
+                            <i class="bi bi-exclamation-triangle me-1"></i>Service Gaps
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="actions.html">
+                            <i class="bi bi-list-check me-1"></i>Action Items
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">
+                            <i class="bi bi-arrow-left-circle me-1"></i>Back to Services
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Stats Overview -->
+    <section class="py-4 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">15</h5>
+                            <p class="card-text">Total Actions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">6</h5>
+                            <p class="card-text">In Progress</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">4</h5>
+                            <p class="card-text">Proposed</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">5</h5>
+                            <p class="card-text">Completed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <!-- Filter Sidebar -->
+                <div class="col-lg-3 mb-4">
+                    <div class="filter-sidebar">
+                        <h5 class="mb-3">Filter Actions</h5>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select">
+                                <option value="">All Statuses</option>
+                                <option value="proposed">Proposed</option>
+                                <option value="in-progress" selected>In Progress</option>
+                                <option value="completed">Completed</option>
+                                <option value="delayed">Delayed</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Responsible Organization</label>
+                            <select class="form-select">
+                                <option value="">All Organizations</option>
+                                <option value="health_dept">Health Department</option>
+                                <option value="social_services">Social Services</option>
+                                <option value="education">Education Department</option>
+                                <option value="transport">Transport Authority</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Due Date</label>
+                            <select class="form-select">
+                                <option value="">Any Time</option>
+                                <option value="this_week">This Week</option>
+                                <option value="this_month">This Month</option>
+                                <option value="overdue">Overdue</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Related Gap</label>
+                            <select class="form-select">
+                                <option value="">All Gaps</option>
+                                <option value="youth_mental_health">Youth Mental Health</option>
+                                <option value="disability_transport">Accessible Transport</option>
+                                <option value="elder_care">Elder Care</option>
+                            </select>
+                        </div>
+                        
+                        <button class="btn btn-primary w-100">
+                            <i class="bi bi-funnel me-2"></i>Apply Filters
+                        </button>
+                        
+                        <button class="btn btn-success w-100 mt-2">
+                            <i class="bi bi-plus-circle me-2"></i>New Action
+                        </button>
+                    </div>
+                    
+                    <!-- Status Distribution Chart -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Status Distribution</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="statusChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Main Content Area -->
+                <div class="col-lg-9">
+                    <!-- Actions List -->
+                    <div class="row" id="actionsContainer">
+                        <!-- Action cards will be dynamically loaded here -->
+                        <div class="col-md-12 mb-4">
+                            <div class="card action-card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title">Expand Telehealth Services</h5>
+                                        <span class="badge status-in-progress">In Progress</span>
+                                    </div>
+                                    <p class="card-text">Implement telehealth options for mental health services to reduce wait times for young people in Mount Isa.</p>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="mb-1"><i class="bi bi-building me-2"></i> <strong>Responsible:</strong> Health Department</p>
+                                            <p class="mb-1"><i class="bi bi-calendar me-2"></i> <strong>Due:</strong> August 15, 2025</p>
+                                            <p class="mb-1"><i class="bi bi-link me-2"></i> <strong>Related Gap:</strong> Youth Mental Health Services</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="mb-1"><i class="bi bi-person me-2"></i> <strong>Contact:</strong> Dr. Sarah Williams</p>
+                                            <p class="mb-1"><i class="bi bi-currency-dollar me-2"></i> <strong>Budget:</strong> $25,000</p>
+                                            <p class="mb-1"><i class="bi bi-graph-up me-2"></i> <strong>Progress:</strong> 65%</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="progress mb-3">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 65%"></div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <span class="badge bg-info">High Impact</span>
+                                            <span class="badge bg-warning">Funding Secured</span>
+                                        </div>
+                                        <div>
+                                            <a href="#" class="btn btn-sm btn-outline-primary me-2">View Details</a>
+                                            <a href="#" class="btn btn-sm btn-outline-secondary">Update Progress</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-12 mb-4">
+                            <div class="card action-card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title">Mobile Disability Transport Service</h5>
+                                        <span class="badge status-proposed">Proposed</span>
+                                    </div>
+                                    <p class="card-text">Develop a mobile transport service for people with disabilities across the Mount Isa region to access medical appointments.</p>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="mb-1"><i class="bi bi-building me-2"></i> <strong>Responsible:</strong> Social Services</p>
+                                            <p class="mb-1"><i class="bi bi-calendar me-2"></i> <strong>Due:</strong> September 30, 2025</p>
+                                            <p class="mb-1"><i class="bi bi-link me-2"></i> <strong>Related Gap:</strong> Accessible Transport</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="mb-1"><i class="bi bi-person me-2"></i> <strong>Contact:</strong> Michael Chen</p>
+                                            <p class="mb-1"><i class="bi bi-currency-dollar me-2"></i> <strong>Budget:</strong> $75,000</p>
+                                            <p class="mb-1"><i class="bi bi-graph-up me-2"></i> <strong>Progress:</strong> 0%</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="progress mb-3">
+                                        <div class="progress-bar bg-secondary" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <span class="badge bg-info">High Impact</span>
+                                            <span class="badge bg-danger">Funding Pending</span>
+                                        </div>
+                                        <div>
+                                            <a href="#" class="btn btn-sm btn-outline-primary me-2">View Details</a>
+                                            <a href="#" class="btn btn-sm btn-outline-secondary">Update Progress</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-12 mb-4">
+                            <div class="card action-card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title">Community Feedback Portal</h5>
+                                        <span class="badge status-completed">Completed</span>
+                                    </div>
+                                    <p class="card-text">Launch online portal for community members to share feedback and suggestions about local services.</p>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="mb-1"><i class="bi bi-building me-2"></i> <strong>Responsible:</strong> Digital Team</p>
+                                            <p class="mb-1"><i class="bi bi-calendar me-2"></i> <strong>Due:</strong> July 10, 2025</p>
+                                            <p class="mb-1"><i class="bi bi-link me-2"></i> <strong>Related Gap:</strong> Community Engagement</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="mb-1"><i class="bi bi-person me-2"></i> <strong>Contact:</strong> Lisa Rodriguez</p>
+                                            <p class="mb-1"><i class="bi bi-currency-dollar me-2"></i> <strong>Budget:</strong> $15,000</p>
+                                            <p class="mb-1"><i class="bi bi-graph-up me-2"></i> <strong>Progress:</strong> 100%</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="progress mb-3">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%"></div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <span class="badge bg-info">Medium Impact</span>
+                                            <span class="badge bg-success">Funding Secured</span>
+                                        </div>
+                                        <div>
+                                            <a href="#" class="btn btn-sm btn-outline-primary me-2">View Details</a>
+                                            <a href="#" class="btn btn-sm btn-outline-secondary">Update Progress</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-12 mb-4">
+                            <div class="card action-card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title">In-Home Elder Care Program</h5>
+                                        <span class="badge status-delayed">Delayed</span>
+                                    </div>
+                                    <p class="card-text">Establish an in-home care program for elderly community members wishing to age in place in Normanton.</p>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="mb-1"><i class="bi bi-building me-2"></i> <strong>Responsible:</strong> Health Department</p>
+                                            <p class="mb-1"><i class="bi bi-calendar me-2"></i> <strong>Due:</strong> June 30, 2025</p>
+                                            <p class="mb-1"><i class="bi bi-link me-2"></i> <strong>Related Gap:</strong> Elder Care Services</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="mb-1"><i class="bi bi-person me-2"></i> <strong>Contact:</strong> Dr. James Wilson</p>
+                                            <p class="mb-1"><i class="bi bi-currency-dollar me-2"></i> <strong>Budget:</strong> $40,000</p>
+                                            <p class="mb-1"><i class="bi bi-graph-up me-2"></i> <strong>Progress:</strong> 30%</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="progress mb-3">
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 30%"></div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <span class="badge bg-info">Medium Impact</span>
+                                            <span class="badge bg-warning">Funding Secured</span>
+                                        </div>
+                                        <div>
+                                            <a href="#" class="btn btn-sm btn-outline-primary me-2">View Details</a>
+                                            <a href="#" class="btn btn-sm btn-outline-secondary">Update Progress</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Mount Isa Service Map</h5>
+                    <p class="text-muted">Connecting people with essential services in Mount Isa and Lower Gulf communities.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="../index.html" class="text-white text-decoration-none">Service Directory</a></li>
+                        <li><a href="dashboard.html" class="text-white text-decoration-none">Engagement Dashboard</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">About</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contact</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-envelope me-2"></i> info@mountisaservices.com</li>
+                        <li><i class="bi bi-telephone me-2"></i> (07) 1234 5678</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center text-muted">
+                <p>&copy; 2025 Mount Isa Service Map. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="utils.js"></script>
+    <script>
+        // Initialize status distribution chart
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            const statusChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Proposed', 'In Progress', 'Completed', 'Delayed'],
+                    datasets: [{
+                        data: [4, 6, 5, 1],
+                        backgroundColor: [
+                            '#6c757d',
+                            '#ffc107',
+                            '#28a745',
+                            '#dc3545'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

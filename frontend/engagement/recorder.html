@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Recorder - Mount Isa Service Map</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .recording-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+        .waveform-container {
+            height: 100px;
+            background-color: #f8f9fa;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
+        .participant-tag {
+            background-color: #e9ecef;
+            border-radius: 20px;
+            padding: 0.25rem 0.75rem;
+            margin-right: 0.5rem;
+            display: inline-block;
+        }
+        .recording-indicator {
+            width: 12px;
+            height: 12px;
+            background-color: #dc3545;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5rem;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .metadata-card {
+            background-color: #f8f9fa;
+            border-left: 4px solid #0d6efd;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-primary text-white py-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-5 fw-bold mb-2">Interview Recorder</h1>
+                    <p class="lead mb-0">Mount Isa Service Map - Community Engagement Tool</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <button class="btn btn-light btn-lg">
+                        <i class="bi bi-person-circle me-2"></i>Admin
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="bi bi-people me-2"></i>Community Engagement
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#engagementNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="engagementNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="recorder.html">
+                            <i class="bi bi-mic me-1"></i>Record Interview
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="gaps.html">
+                            <i class="bi bi-exclamation-triangle me-1"></i>Service Gaps
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="actions.html">
+                            <i class="bi bi-list-check me-1"></i>Action Items
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">
+                            <i class="bi bi-arrow-left-circle me-1"></i>Back to Services
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Recording Interface -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Recording Session</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="waveform-container" id="waveform">
+                                <div class="d-flex align-items-center justify-content-center h-100">
+                                    <div class="text-center">
+                                        <i class="bi bi-mic-fill text-primary" style="font-size: 2rem;"></i>
+                                        <p class="mt-2 mb-0">Press record to begin capturing audio</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-center mb-3">
+                                <button id="recordButton" class="btn btn-danger btn-lg me-3">
+                                    <i class="bi bi-record-circle me-2"></i>Record
+                                </button>
+                                <button id="pauseButton" class="btn btn-warning btn-lg me-3" disabled>
+                                    <i class="bi bi-pause-circle me-2"></i>Pause
+                                </button>
+                                <button id="stopButton" class="btn btn-secondary btn-lg" disabled>
+                                    <i class="bi bi-stop-circle me-2"></i>Stop
+                                </button>
+                            </div>
+                            
+                            <div class="text-center mb-3">
+                                <span id="recordingStatus" class="badge bg-secondary">Ready to record</span>
+                                <span id="recordingTime" class="ms-3">00:00:00</span>
+                            </div>
+                            
+                            <div class="alert alert-info" role="alert">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Your recording is automatically saved locally and will be securely uploaded when you submit.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Participants -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Participants</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Add Participant</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="participantName" placeholder="Participant name">
+                                    <select class="form-select" id="participantType" style="max-width: 200px;">
+                                        <option value="community">Community Member</option>
+                                        <option value="service_user">Service User</option>
+                                        <option value="service_provider">Service Provider</option>
+                                        <option value="advocate">Community Advocate</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    <button class="btn btn-outline-primary" type="button" id="addParticipant">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="participantsList">
+                                <div class="participant-tag">
+                                    John Smith <span class="badge bg-secondary ms-1">Community Member</span>
+                                    <button type="button" class="btn-close btn-close-white ms-2" aria-label="Remove"></button>
+                                </div>
+                                <div class="participant-tag">
+                                    Mary Johnson <span class="badge bg-secondary ms-1">Service User</span>
+                                    <button type="button" class="btn-close btn-close-white ms-2" aria-label="Remove"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <!-- Session Metadata -->
+                    <div class="card metadata-card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Session Details</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Location</label>
+                                <select class="form-select" id="location">
+                                    <option value="">Select location</option>
+                                    <option value="mount_isa">Mount Isa</option>
+                                    <option value="mornington_island">Mornington Island</option>
+                                    <option value="normanton">Normanton</option>
+                                    <option value="doomadgee">Doomadgee</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Date & Time</label>
+                                <input type="datetime-local" class="form-control" id="sessionDateTime">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Language</label>
+                                <select class="form-select" id="language">
+                                    <option value="en">English</option>
+                                    <option value="indigenous">Indigenous Language</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Consent</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="consentGiven" checked>
+                                    <label class="form-check-label" for="consentGiven">
+                                        Consent has been obtained for recording and use of this interview
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Notes</label>
+                                <textarea class="form-control" id="sessionNotes" rows="3" placeholder="Any additional notes about this session..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Actions</h5>
+                        </div>
+                        <div class="card-body">
+                            <button class="btn btn-success w-100 mb-2" id="saveSession">
+                                <i class="bi bi-cloud-arrow-up me-2"></i>Save & Upload
+                            </button>
+                            <button class="btn btn-outline-secondary w-100" id="discardSession">
+                                <i class="bi bi-trash me-2"></i>Discard Session
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Mount Isa Service Map</h5>
+                    <p class="text-muted">Connecting people with essential services in Mount Isa and Lower Gulf communities.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="../index.html" class="text-white text-decoration-none">Service Directory</a></li>
+                        <li><a href="dashboard.html" class="text-white text-decoration-none">Engagement Dashboard</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">About</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contact</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-envelope me-2"></i> info@mountisaservices.com</li>
+                        <li><i class="bi bi-telephone me-2"></i> (07) 1234 5678</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center text-muted">
+                <p>&copy; 2025 Mount Isa Service Map. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="utils.js"></script>
+    <script>
+        // Recording state
+        let mediaRecorder;
+        let audioChunks = [];
+        let recordingStartTime;
+        let timerInterval;
+        
+        // DOM Elements
+        const recordButton = document.getElementById('recordButton');
+        const pauseButton = document.getElementById('pauseButton');
+        const stopButton = document.getElementById('stopButton');
+        const recordingStatus = document.getElementById('recordingStatus');
+        const recordingTime = document.getElementById('recordingTime');
+        const addParticipantButton = document.getElementById('addParticipant');
+        const saveSessionButton = document.getElementById('saveSession');
+        const discardSessionButton = document.getElementById('discardSession');
+        
+        // Initialize date/time picker with current time
+        const now = new Date();
+        const offset = now.getTimezoneOffset();
+        const adjustedDate = new Date(now.getTime() - (offset * 60 * 1000));
+        document.getElementById('sessionDateTime').value = adjustedDate.toISOString().slice(0, 16);
+        
+        // Event Listeners
+        recordButton.addEventListener('click', startRecording);
+        pauseButton.addEventListener('click', pauseRecording);
+        stopButton.addEventListener('click', stopRecording);
+        addParticipantButton.addEventListener('click', addParticipant);
+        saveSessionButton.addEventListener('click', saveSession);
+        discardSessionButton.addEventListener('click', discardSession);
+        
+        // Check for microphone access
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    console.log('Recording stopped, blob size:', audioBlob.size);
+                    // In a real implementation, you would upload this blob to your server
+                };
+            })
+            .catch(err => {
+                console.error('Error accessing microphone:', err);
+                recordingStatus.textContent = 'Microphone access denied';
+                recordingStatus.className = 'badge bg-danger';
+                recordButton.disabled = true;
+            });
+        
+        // Recording functions
+        function startRecording() {
+            if (!mediaRecorder) {
+                alert('Microphone access is required to record.');
+                return;
+            }
+            
+            audioChunks = [];
+            mediaRecorder.start();
+            recordingStartTime = new Date();
+            startTimer();
+            
+            recordButton.disabled = true;
+            pauseButton.disabled = false;
+            stopButton.disabled = false;
+            
+            recordingStatus.textContent = 'Recording...';
+            recordingStatus.className = 'badge bg-danger';
+        }
+        
+        function pauseRecording() {
+            if (mediaRecorder.state === 'recording') {
+                mediaRecorder.pause();
+                pauseTimer();
+                recordingStatus.textContent = 'Paused';
+                recordingStatus.className = 'badge bg-warning';
+                pauseButton.innerHTML = '<i class="bi bi-play-circle me-2"></i>Resume';
+            } else {
+                mediaRecorder.resume();
+                startTimer();
+                recordingStatus.textContent = 'Recording...';
+                recordingStatus.className = 'badge bg-danger';
+                pauseButton.innerHTML = '<i class="bi bi-pause-circle me-2"></i>Pause';
+            }
+        }
+        
+        function stopRecording() {
+            if (mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+            }
+            
+            clearInterval(timerInterval);
+            recordButton.disabled = false;
+            pauseButton.disabled = true;
+            stopButton.disabled = true;
+            pauseButton.innerHTML = '<i class="bi bi-pause-circle me-2"></i>Pause';
+            
+            recordingStatus.textContent = 'Recording saved locally';
+            recordingStatus.className = 'badge bg-success';
+        }
+        
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                const now = new Date();
+                const diff = new Date(now - recordingStartTime);
+                const hours = String(diff.getUTCHours()).padStart(2, '0');
+                const minutes = String(diff.getUTCMinutes()).padStart(2, '0');
+                const seconds = String(diff.getUTCSeconds()).padStart(2, '0');
+                recordingTime.textContent = `${hours}:${minutes}:${seconds}`;
+            }, 1000);
+        }
+        
+        function pauseTimer() {
+            clearInterval(timerInterval);
+        }
+        
+        function addParticipant() {
+            const nameInput = document.getElementById('participantName');
+            const typeSelect = document.getElementById('participantType');
+            const name = nameInput.value.trim();
+            
+            if (name) {
+                const typeText = typeSelect.options[typeSelect.selectedIndex].text;
+                const participantsList = document.getElementById('participantsList');
+                
+                const participantTag = document.createElement('div');
+                participantTag.className = 'participant-tag';
+                participantTag.innerHTML = `
+                    ${name} <span class="badge bg-secondary ms-1">${typeText}</span>
+                    <button type="button" class="btn-close btn-close-white ms-2" aria-label="Remove"></button>
+                `;
+                
+                // Add remove functionality
+                const removeButton = participantTag.querySelector('.btn-close');
+                removeButton.addEventListener('click', () => {
+                    participantTag.remove();
+                });
+                
+                participantsList.appendChild(participantTag);
+                
+                // Clear input
+                nameInput.value = '';
+                nameInput.focus();
+            }
+        }
+        
+        function saveSession() {
+            alert('In a real implementation, this would save the session and upload the recording to the server.');
+            // Here you would:
+            // 1. Upload the audio blob to your server
+            // 2. Send metadata (participants, location, etc.)
+            // 3. Redirect to the interview details page
+        }
+        
+        function discardSession() {
+            if (confirm('Are you sure you want to discard this recording session?')) {
+                // Reset the form
+                document.getElementById('participantsList').innerHTML = '';
+                document.getElementById('sessionNotes').value = '';
+                document.getElementById('consentGiven').checked = true;
+                
+                // Reset recording interface
+                stopRecording();
+                recordingTime.textContent = '00:00:00';
+                recordingStatus.textContent = 'Ready to record';
+                recordingStatus.className = 'badge bg-secondary';
+                
+                alert('Session discarded.');
+            }
+        }
+        
+        // Allow adding participants by pressing Enter
+        document.getElementById('participantName').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addParticipant();
+            }
+        });
+    </script>
+</body>
+</html>

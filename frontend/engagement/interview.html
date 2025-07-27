@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Details - Mount Isa Service Map</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .transcript-segment {
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            margin-bottom: 0.5rem;
+        }
+        .transcript-segment:hover {
+            background-color: #f8f9fa;
+        }
+        .transcript-segment.active {
+            background-color: #e9ecef;
+            border-left: 3px solid #0d6efd;
+        }
+        .theme-tag {
+            background-color: #6f42c1;
+            color: white;
+            border-radius: 20px;
+            padding: 0.25rem 0.75rem;
+            margin-right: 0.5rem;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+        .gap-card {
+            border-left: 4px solid #dc3545;
+        }
+        .playback-controls {
+            background-color: #f8f9fa;
+            border-radius: 0.375rem;
+            padding: 1rem;
+        }
+        .audio-waveform {
+            height: 60px;
+            background-color: #e9ecef;
+            border-radius: 0.375rem;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .waveform-bar {
+            position: absolute;
+            bottom: 0;
+            width: 2px;
+            background-color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-primary text-white py-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-5 fw-bold mb-2">Interview Details</h1>
+                    <p class="lead mb-0">Mount Isa Service Map - Community Engagement Tool</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <button class="btn btn-light btn-lg">
+                        <i class="bi bi-person-circle me-2"></i>Admin
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="bi bi-people me-2"></i>Community Engagement
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#engagementNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="engagementNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="recorder.html">
+                            <i class="bi bi-mic me-1"></i>Record Interview
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="gaps.html">
+                            <i class="bi bi-exclamation-triangle me-1"></i>Service Gaps
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="actions.html">
+                            <i class="bi bi-list-check me-1"></i>Action Items
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">
+                            <i class="bi bi-arrow-left-circle me-1"></i>Back to Services
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Interview Header -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h2 class="card-title">Youth Mental Health Support</h2>
+                                    <p class="text-muted mb-2">Discussion with young people about mental health service challenges</p>
+                                    <div class="d-flex flex-wrap">
+                                        <span class="badge bg-primary me-2 mb-1">Mount Isa</span>
+                                        <span class="badge bg-success me-2 mb-1">Validated</span>
+                                        <span class="badge bg-info me-2 mb-1">3 Participants</span>
+                                        <span class="badge bg-warning me-2 mb-1">18 minutes</span>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <p class="mb-1"><i class="bi bi-calendar me-2"></i>July 25, 2025</p>
+                                    <p class="mb-1"><i class="bi bi-person me-2"></i>Interviewer: Sarah Johnson</p>
+                                    <p class="mb-0"><i class="bi bi-clock me-2"></i>Recorded at 10:30 AM</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Playback Interface -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Audio Playback</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="playback-controls">
+                                <div class="d-flex justify-content-center mb-3">
+                                    <button class="btn btn-primary btn-lg me-3">
+                                        <i class="bi bi-skip-start"></i>
+                                    </button>
+                                    <button class="btn btn-primary btn-lg me-3">
+                                        <i class="bi bi-play-circle" style="font-size: 2rem;"></i>
+                                    </button>
+                                    <button class="btn btn-primary btn-lg">
+                                        <i class="bi bi-skip-end"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="d-flex align-items-center">
+                                    <span class="me-2">00:00</span>
+                                    <div class="progress flex-grow-1" style="height: 8px;">
+                                        <div class="progress-bar" role="progressbar" style="width: 35%;"></div>
+                                    </div>
+                                    <span class="ms-2">18:42</span>
+                                </div>
+                            </div>
+                            
+                            <div class="audio-waveform">
+                                <!-- Simulated waveform -->
+                                <div class="waveform-bar" style="left: 5%; height: 20px;"></div>
+                                <div class="waveform-bar" style="left: 10%; height: 35px;"></div>
+                                <div class="waveform-bar" style="left: 15%; height: 50px;"></div>
+                                <div class="waveform-bar" style="left: 20%; height: 40px;"></div>
+                                <div class="waveform-bar" style="left: 25%; height: 30px;"></div>
+                                <div class="waveform-bar" style="left: 30%; height: 45px;"></div>
+                                <div class="waveform-bar" style="left: 35%; height: 55px;"></div>
+                                <div class="waveform-bar" style="left: 40%; height: 35px;"></div>
+                                <div class="waveform-bar" style="left: 45%; height: 25px;"></div>
+                                <div class="waveform-bar" style="left: 50%; height: 40px;"></div>
+                                <div class="waveform-bar" style="left: 55%; height: 50px;"></div>
+                                <div class="waveform-bar" style="left: 60%; height: 30px;"></div>
+                                <div class="waveform-bar" style="left: 65%; height: 45px;"></div>
+                                <div class="waveform-bar" style="left: 70%; height: 35px;"></div>
+                                <div class="waveform-bar" style="left: 75%; height: 20px;"></div>
+                                <div class="waveform-bar" style="left: 80%; height: 30px;"></div>
+                                <div class="waveform-bar" style="left: 85%; height: 40px;"></div>
+                                <div class="waveform-bar" style="left: 90%; height: 25px;"></div>
+                                <div class="waveform-bar" style="left: 95%; height: 15px;"></div>
+                            </div>
+                            
+                            <div class="alert alert-info" role="alert">
+                                <i class="bi bi-info-circle me-2"></i>
+                                This interview has been automatically transcribed and analyzed for themes.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Transcript -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Transcript</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <div class="transcript-segment active">
+                                    <small class="text-muted">00:12 - Participant 1</small>
+                                    <p class="mb-0">I've been trying to get an appointment with the youth mental health service for over three months now. It's really hard when you're struggling and you can't get the help you need right away.</p>
+                                </div>
+                                
+                                <div class="transcript-segment">
+                                    <small class="text-muted">01:45 - Participant 2</small>
+                                    <p class="mb-0">Yeah, I totally agree. My sister had to wait four months and by that time her situation had gotten so much worse. She ended up in the emergency department because there was nowhere else to turn.</p>
+                                </div>
+                                
+                                <div class="transcript-segment">
+                                    <small class="text-muted">03:22 - Participant 3</small>
+                                    <p class="mb-0">The problem is that there's just not enough services here. Everyone has to go to Townsville if they want specialized help, but that's a five-hour drive. Not everyone can just pick up and leave like that.</p>
+                                </div>
+                                
+                                <div class="transcript-segment">
+                                    <small class="text-muted">05:10 - Participant 1</small>
+                                    <p class="mb-0">What would really help is if they could do telehealth appointments. That way we could talk to someone without having to travel. I know a lot of young people who would prefer that anyway.</p>
+                                </div>
+                                
+                                <div class="transcript-segment">
+                                    <small class="text-muted">07:33 - Participant 2</small>
+                                    <p class="mb-0">I also think they need more staff. The counselors that are here are amazing, but they're completely overwhelmed. They can only take on so many clients.</p>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-outline-primary">
+                                <i class="bi bi-download me-2"></i>Download Full Transcript
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <!-- AI Analysis -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">AI Analysis</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6>Key Themes Identified</h6>
+                            <div class="mb-3">
+                                <div class="theme-tag">Long Wait Times</div>
+                                <div class="theme-tag">Access Barriers</div>
+                                <div class="theme-tag">Telehealth</div>
+                                <div class="theme-tag">Staffing Shortages</div>
+                                <div class="theme-tag">Emergency Department Use</div>
+                            </div>
+                            
+                            <h6>Summary</h6>
+                            <p>This interview highlights significant challenges young people face accessing mental health services in Mount Isa, including long wait times, geographic barriers, and staffing shortages. Participants suggest telehealth as a potential solution.</p>
+                            
+                            <h6>Sentiment Analysis</h6>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 30%">Positive (30%)</div>
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: 20%">Neutral (20%)</div>
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: 50%">Negative (50%)</div>
+                            </div>
+                            
+                            <h6>Confidence Score</h6>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: 92%">92%</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Identified Gaps -->
+                    <div class="card mb-4 gap-card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Related Service Gaps</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                                <h6 class="mb-0">Youth Mental Health Services</h6>
+                                <span class="badge bg-danger">High Priority</span>
+                            </div>
+                            <p class="mb-2">Limited specialized mental health services for young people, with wait times exceeding 3 months.</p>
+                            <p class="mb-3"><small class="text-muted">12 supporting interviews • 150+ affected people</small></p>
+                            
+                            <div class="d-flex justify-content-between mb-2">
+                                <h6 class="mb-0">Telehealth Access</h6>
+                                <span class="badge bg-warning">Medium Priority</span>
+                            </div>
+                            <p class="mb-2">Lack of remote consultation options for people in rural areas.</p>
+                            <p class="mb-0"><small class="text-muted">8 supporting interviews • 95 affected people</small></p>
+                        </div>
+                    </div>
+                    
+                    <!-- Participants -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Participants</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span>John Smith</span>
+                                        <span class="badge bg-secondary">Community Member</span>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Mary Johnson</span>
+                                        <span class="badge bg-secondary">Service User</span>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Robert Davis</span>
+                                        <span class="badge bg-secondary">Community Advocate</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Actions</h5>
+                        </div>
+                        <div class="card-body">
+                            <button class="btn btn-primary w-100 mb-2">
+                                <i class="bi bi-check-circle me-2"></i>Validate Analysis
+                            </button>
+                            <button class="btn btn-outline-secondary w-100 mb-2">
+                                <i class="bi bi-pencil me-2"></i>Edit Themes
+                            </button>
+                            <button class="btn btn-outline-danger w-100">
+                                <i class="bi bi-flag me-2"></i>Flag for Review
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Mount Isa Service Map</h5>
+                    <p class="text-muted">Connecting people with essential services in Mount Isa and Lower Gulf communities.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="../index.html" class="text-white text-decoration-none">Service Directory</a></li>
+                        <li><a href="dashboard.html" class="text-white text-decoration-none">Engagement Dashboard</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">About</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contact</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-envelope me-2"></i> info@mountisaservices.com</li>
+                        <li><i class="bi bi-telephone me-2"></i> (07) 1234 5678</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center text-muted">
+                <p>&copy; 2025 Mount Isa Service Map. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="utils.js"></script>
+    <script>
+        // Transcript segment selection
+        document.querySelectorAll('.transcript-segment').forEach(segment => {
+            segment.addEventListener('click', function() {
+                document.querySelectorAll('.transcript-segment').forEach(s => {
+                    s.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // Simulate playback progress
+        let progress = 35;
+        const progressBar = document.querySelector('.progress-bar');
+        const interval = setInterval(() => {
+            progress += 0.1;
+            if (progress > 100) progress = 0;
+            progressBar.style.width = progress + '%';
+        }, 100);
+    </script>
+</body>
+</html>
