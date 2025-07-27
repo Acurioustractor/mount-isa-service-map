@@ -79,20 +79,41 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Service not found' });
     }
     
-    // Process the results to group locations and contacts
+    // Process the flattened results in a single pass using Maps for efficient deduplication
+    const serviceData = result.rows[0];
+    const locations = new Map();
+    const contacts = new Map();
+    
+    result.rows.forEach(row => {
+      if (row.location_address && !locations.has(row.location_address)) {
+        locations.set(row.location_address, {
+          address: row.location_address,
+          suburb: row.location_suburb
+        });
+      }
+      
+      if (row.contact_name && !contacts.has(row.contact_name)) {
+        contacts.set(row.contact_name, {
+          name: row.contact_name,
+          title: row.contact_title,
+          phone: row.contact_phone,
+          email: row.contact_email
+        });
+      }
+    });
+    
     const service = {
-      ...result.rows[0],
-      locations: result.rows.filter(r => r.location_address).map(r => ({
-        address: r.location_address,
-        suburb: r.location_suburb
-      })),
-      contacts: result.rows.filter(r => r.contact_name).map(r => ({
-        name: r.contact_name,
-        title: r.contact_title,
-        phone: r.contact_phone,
-        email: r.contact_email
-      }))
+      ...serviceData,
+      locations: Array.from(locations.values()),
+      contacts: Array.from(contacts.values())
     };
+    
+    delete service.location_address;
+    delete service.location_suburb;
+    delete service.contact_name;
+    delete service.contact_title;
+    delete service.contact_phone;
+    delete service.contact_email;
     
     res.json(service);
   } catch (err) {
