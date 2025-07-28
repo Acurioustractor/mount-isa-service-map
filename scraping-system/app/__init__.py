@@ -1,0 +1,1 @@
+# Mount Isa Service Map - Intelligent Scraping System

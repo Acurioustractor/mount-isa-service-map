@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Gaps Analysis - Mount Isa Service Map</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .gap-card {
+            border-left: 4px solid #dc3545;
+            transition: transform 0.2s;
+        }
+        .gap-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .priority-high { background-color: #dc3545; color: white; }
+        .priority-medium { background-color: #ffc107; color: black; }
+        .priority-low { background-color: #28a745; color: white; }
+        .filter-sidebar {
+            background-color: #f8f9fa;
+            border-radius: 0.375rem;
+            padding: 1rem;
+        }
+        .map-container {
+            height: 400px;
+            background-color: #e9ecef;
+            border-radius: 0.375rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .map-marker {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #dc3545;
+            border: 2px solid white;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .map-marker.high { background-color: #dc3545; }
+        .map-marker.medium { background-color: #ffc107; }
+        .map-marker.low { background-color: #28a745; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-primary text-white py-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-5 fw-bold mb-2">Service Gaps Analysis</h1>
+                    <p class="lead mb-0">Mount Isa Service Map - Identifying and Addressing Community Needs</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <button class="btn btn-light btn-lg">
+                        <i class="bi bi-person-circle me-2"></i>Admin
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="bi bi-people me-2"></i>Community Engagement
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#engagementNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="engagementNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="recorder.html">
+                            <i class="bi bi-mic me-1"></i>Record Interview
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="gaps.html">
+                            <i class="bi bi-exclamation-triangle me-1"></i>Service Gaps
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="actions.html">
+                            <i class="bi bi-list-check me-1"></i>Action Items
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">
+                            <i class="bi bi-arrow-left-circle me-1"></i>Back to Services
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Stats Overview -->
+    <section class="py-4 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">12</h5>
+                            <p class="card-text">Total Gaps</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">5</h5>
+                            <p class="card-text">High Priority</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">4</h5>
+                            <p class="card-text">Medium Priority</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">3</h5>
+                            <p class="card-text">Low Priority</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <!-- Filter Sidebar -->
+                <div class="col-lg-3 mb-4">
+                    <div class="filter-sidebar">
+                        <h5 class="mb-3">Filter Gaps</h5>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <select class="form-select">
+                                <option value="">All Locations</option>
+                                <option value="mount_isa" selected>Mount Isa</option>
+                                <option value="mornington_island">Mornington Island</option>
+                                <option value="normanton">Normanton</option>
+                                <option value="doomadgee">Doomadgee</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Priority</label>
+                            <select class="form-select">
+                                <option value="">All Priorities</option>
+                                <option value="high">High Priority</option>
+                                <option value="medium">Medium Priority</option>
+                                <option value="low">Low Priority</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Service Type</label>
+                            <select class="form-select">
+                                <option value="">All Service Types</option>
+                                <option value="mental_health">Mental Health</option>
+                                <option value="disability">Disability Support</option>
+                                <option value="youth">Youth Services</option>
+                                <option value="health">Health Services</option>
+                                <option value="transport">Transport</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select">
+                                <option value="">All Statuses</option>
+                                <option value="active" selected>Active</option>
+                                <option value="in_progress">In Progress</option>
+                                <option value="addressed">Addressed</option>
+                            </select>
+                        </div>
+                        
+                        <button class="btn btn-primary w-100">
+                            <i class="bi bi-funnel me-2"></i>Apply Filters
+                        </button>
+                    </div>
+                    
+                    <!-- Priority Distribution Chart -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Priority Distribution</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="priorityChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Main Content Area -->
+                <div class="col-lg-9">
+                    <!-- Map Visualization -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Geographic Distribution</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="map-container">
+                                <!-- Simplified map visualization -->
+                                <div class="position-absolute" style="top: 30%; left: 40%;">
+                                    <h6 class="text-center">Mount Isa Region</h6>
+                                </div>
+                                
+                                <!-- Map markers -->
+                                <div class="map-marker high" style="top: 40%; left: 35%;" title="Youth Mental Health - High Priority"></div>
+                                <div class="map-marker high" style="top: 35%; left: 50%;" title="Disability Transport - High Priority"></div>
+                                <div class="map-marker medium" style="top: 50%; left: 30%;" title="Elder Care - Medium Priority"></div>
+                                <div class="map-marker medium" style="top: 45%; left: 60%;" title="Substance Abuse - Medium Priority"></div>
+                                <div class="map-marker low" style="top: 60%; left: 45%;" title="Recreation - Low Priority"></div>
+                                
+                                <div class="position-absolute" style="bottom: 10px; left: 10px;">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-2">
+                                            <div class="map-marker high d-inline-block me-1" style="position: static; transform: none;"></div>
+                                            <span>High Priority</span>
+                                        </div>
+                                        <div class="me-2">
+                                            <div class="map-marker medium d-inline-block me-1" style="position: static; transform: none;"></div>
+                                            <span>Medium Priority</span>
+                                        </div>
+                                        <div>
+                                            <div class="map-marker low d-inline-block me-1" style="position: static; transform: none;"></div>
+                                            <span>Low Priority</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Gaps List -->
+                    <div class="row" id="gapsContainer">
+                        <!-- Gap cards will be dynamically loaded here -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card gap-card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title">Youth Mental Health Services</h5>
+                                        <span class="badge priority-high">High Priority</span>
+                                    </div>
+                                    <p class="card-text">Limited specialized mental health services for young people, with wait times exceeding 3 months.</p>
+                                    <div class="d-flex justify-content-between text-muted small mb-2">
+                                        <span><i class="bi bi-geo-alt me-1"></i>Mount Isa</span>
+                                        <span><i class="bi bi-people me-1"></i>150+ affected</span>
+                                    </div>
+                                    <div class="progress mb-2">
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 85%"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between small">
+                                        <span>Severity: 8.5/10</span>
+                                        <span>Last mentioned: Jul 25, 2025</span>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted">12 supporting interviews</small>
+                                        <a href="#" class="btn btn-sm btn-outline-danger">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="card gap-card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title">Accessible Transport</h5>
+                                        <span class="badge priority-high">High Priority</span>
+                                    </div>
+                                    <p class="card-text">Lack of wheelchair-accessible transport for medical appointments and daily activities.</p>
+                                    <div class="d-flex justify-content-between text-muted small mb-2">
+                                        <span><i class="bi bi-geo-alt me-1"></i>Mornington Island</span>
+                                        <span><i class="bi bi-people me-1"></i>75+ affected</span>
+                                    </div>
+                                    <div class="progress mb-2">
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 78%"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between small">
+                                        <span>Severity: 7.8/10</span>
+                                        <span>Last mentioned: Jul 24, 2025</span>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted">8 supporting interviews</small>
+                                        <a href="#" class="btn btn-sm btn-outline-danger">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="card gap-card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title">Elder Care Services</h5>
+                                        <span class="badge priority-medium">Medium Priority</span>
+                                    </div>
+                                    <p class="card-text">Limited in-home care options for elderly community members wishing to age in place.</p>
+                                    <div class="d-flex justify-content-between text-muted small mb-2">
+                                        <span><i class="bi bi-geo-alt me-1"></i>Normanton</span>
+                                        <span><i class="bi bi-people me-1"></i>42 affected</span>
+                                    </div>
+                                    <div class="progress mb-2">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 62%"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between small">
+                                        <span>Severity: 6.2/10</span>
+                                        <span>Last mentioned: Jul 22, 2025</span>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted">5 supporting interviews</small>
+                                        <a href="#" class="btn btn-sm btn-outline-warning">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="card gap-card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title">Substance Abuse Support</h5>
+                                        <span class="badge priority-medium">Medium Priority</span>
+                                    </div>
+                                    <p class="card-text">Insufficient specialized support services for substance abuse recovery in remote communities.</p>
+                                    <div class="d-flex justify-content-between text-muted small mb-2">
+                                        <span><i class="bi bi-geo-alt me-1"></i>Mount Isa</span>
+                                        <span><i class="bi bi-people me-1"></i>38 affected</span>
+                                    </div>
+                                    <div class="progress mb-2">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 58%"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between small">
+                                        <span>Severity: 5.8/10</span>
+                                        <span>Last mentioned: Jul 20, 2025</span>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted">7 supporting interviews</small>
+                                        <a href="#" class="btn btn-sm btn-outline-warning">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Mount Isa Service Map</h5>
+                    <p class="text-muted">Connecting people with essential services in Mount Isa and Lower Gulf communities.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="../index.html" class="text-white text-decoration-none">Service Directory</a></li>
+                        <li><a href="dashboard.html" class="text-white text-decoration-none">Engagement Dashboard</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">About</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contact</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-envelope me-2"></i> info@mountisaservices.com</li>
+                        <li><i class="bi bi-telephone me-2"></i> (07) 1234 5678</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center text-muted">
+                <p>&copy; 2025 Mount Isa Service Map. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="utils.js"></script>
+    <script>
+        // Initialize priority distribution chart
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('priorityChart').getContext('2d');
+            const priorityChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['High Priority', 'Medium Priority', 'Low Priority'],
+                    datasets: [{
+                        data: [5, 4, 3],
+                        backgroundColor: [
+                            '#dc3545',
+                            '#ffc107',
+                            '#28a745'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

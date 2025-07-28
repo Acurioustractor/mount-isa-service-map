@@ -3,293 +3,2922 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mount Isa Service Map</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Mount Isa Service Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
-        .service-card {
-            transition: transform 0.2s;
+        :root {
+            --primary-color: #2563eb;
+            --sidebar-bg: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --hover-bg: #f1f5f9;
+            --accent-color: #3b82f6;
         }
-        .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .category-badge {
-            font-size: 0.8em;
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: var(--text-primary);
+            line-height: 1.6;
         }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .sidebar-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .sidebar-nav {
+            padding: 20px 0;
+        }
+
+        .nav-section {
+            margin-bottom: 32px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0 20px 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 20px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 400;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--accent-color);
+        }
+
+        .nav-item.active {
+            background: var(--hover-bg);
+            color: var(--accent-color);
+            border-left-color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        .nav-item i {
+            width: 20px;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+
+        .nav-item .count {
+            margin-left: auto;
+            background: var(--border-color);
+            color: var(--text-secondary);
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+
+        .content-header {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
         .search-container {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            max-width: 600px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            background: #ffffff;
+            transition: border-color 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .content-body {
+            padding: 40px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        /* Service Cards */
+        .services-grid {
+            display: grid;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .service-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.2s ease;
+        }
+
+        .service-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .service-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 4px 0;
+        }
+
+        .service-category {
+            background: #f1f5f9;
+            color: var(--accent-color);
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .service-description {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .service-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .detail-item i {
+            margin-right: 8px;
+            color: var(--accent-color);
+            width: 16px;
+        }
+
+        .service-actions {
+            display: flex;
+            gap: 12px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .btn i {
+            margin-right: 6px;
+        }
+
+        /* Loading and Empty States */
+        .loading-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content-body {
+                padding: 20px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .service-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Fade-in animation */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Content sections */
+        .content-section {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        /* Dashboard and stats styling */
+        .dashboard-stats, .system-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin: 12px 0;
+        }
+
+        .stat-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .stat-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Interview form styling */
+        .interview-form {
+            max-width: 600px;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Service gaps styling */
+        .gaps-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .gap-item {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .gap-item h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .gap-item p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .priority-badge {
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .priority-badge.high {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .priority-badge.medium {
+            background: #fffbeb;
+            color: #d97706;
+        }
+
+        .priority-badge.low {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+        /* Community Voice Dashboard Styles */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+        }
+
+        .user-role-badge {
+            display: flex;
+            align-items: center;
+            background: var(--hover-bg);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--accent-color);
+        }
+
+        .user-role-badge i {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        /* User View Styles */
+        .user-view {
+            margin-bottom: 40px;
+        }
+
+        .insight-section, .feedback-analysis, .priority-issues {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+
+        .insight-section h3, .feedback-analysis h3, .priority-issues h3 {
+            margin: 0 0 20px 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Trend Items */
+        .trend-items {
+            display: grid;
+            gap: 16px;
+        }
+
+        .trend-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .trend-item i {
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        .trend-item.positive {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+        .trend-item.concerning {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .trend-item.neutral {
+            background: #f8fafc;
+            color: var(--text-secondary);
+        }
+
+        /* Analysis Items */
+        .analysis-items {
+            display: grid;
+            gap: 16px;
+        }
+
+        .analysis-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            border-radius: 8px;
+            background: var(--hover-bg);
+        }
+
+        .sentiment-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+
+        .sentiment-badge.positive {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .sentiment-badge.negative {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .sentiment-badge.suggestion {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        /* Priority Items */
+        .priority-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .priority-item {
+            display: flex;
+            gap: 16px;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+        }
+
+        .priority-item.critical {
+            border-left: 4px solid #dc2626;
+        }
+
+        .priority-item.high {
+            border-left: 4px solid #d97706;
+        }
+
+        .priority-content h4 {
+            margin: 0 0 8px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .priority-content p {
+            margin: 0 0 12px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .cultural-impact {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        /* Admin Controls */
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        /* Interview Browser */
+        .interview-browser {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 40px;
+        }
+
+        .browser-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .browser-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .filter-select {
+            min-width: 160px;
+        }
+
+        .interview-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .interview-item {
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .interview-item:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .interview-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .interview-date {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .urgency-indicator {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .urgency-indicator.critical {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .urgency-indicator.high {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .urgency-indicator.medium {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .urgency-indicator.low {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+        /* Story Timeline Styles */
+        .story-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .story-filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 25px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .filter-btn.active {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+
+        /* Story Timeline */
+        .story-timeline {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .story-timeline::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--accent-color), #e2e8f0);
+        }
+
+        /* Story Cards */
+        .story-card {
+            position: relative;
+            margin: 0 0 32px 70px;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .story-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .story-card::before {
+            content: '';
+            position: absolute;
+            left: -55px;
+            top: 24px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            border: 4px solid white;
+            box-shadow: 0 0 0 3px var(--accent-color);
+        }
+
+        /* Story Card Header */
+        .story-card-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .story-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .story-date {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .story-theme {
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .story-theme.discovery {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .story-theme.community {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .story-theme.innovation {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .story-theme.progress {
+            background: #f0f9ff;
+            color: #0284c7;
+        }
+
+        .story-theme.challenges {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .story-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 12px 0 8px 0;
+            line-height: 1.3;
+        }
+
+        .story-preview {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .expand-indicator {
+            color: var(--accent-color);
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .story-card.expanded .expand-indicator {
+            transform: rotate(180deg);
+        }
+
+        /* Story Card Content */
+        .story-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .story-card.expanded .story-content {
+            max-height: 2000px;
+            opacity: 1;
+        }
+
+        .story-content-inner {
+            padding: 0 24px 24px 24px;
+        }
+
+        .story-body {
+            color: var(--text-primary);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* Story Statistics */
+        .story-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+            padding: 20px;
+            background: var(--hover-bg);
+            border-radius: 8px;
+        }
+
+        .story-stat {
+            text-align: center;
+        }
+
+        .story-stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-color);
+            display: block;
+        }
+
+        .story-stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 4px;
+        }
+
+        /* Story Quotes */
+        .story-quote {
+            border-left: 4px solid var(--accent-color);
+            background: #f8fafc;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-style: italic;
+            color: var(--text-primary);
+        }
+
+        .story-quote-author {
+            font-weight: 600;
+            font-style: normal;
+            color: var(--accent-color);
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        /* Story Actions */
+        .story-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .story-action-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .story-action-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .story-action-btn i {
+            margin-right: 6px;
+        }
+
+        .story-action-btn.primary {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .story-action-btn.primary:hover {
+            background: #2563eb;
+            border-color: #2563eb;
+        }
+
+        /* Story Card Types */
+        .story-card.featured {
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .story-card.urgent {
+            border-left: 4px solid #dc2626;
+        }
+
+        .story-card.success {
+            border-left: 4px solid #16a34a;
+        }
+
+        /* Welcome Page Styles */
+        .welcome-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .welcome-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .welcome-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .welcome-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .welcome-section-block {
+            margin-bottom: 56px;
+            padding: 32px;
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .welcome-section-block:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+
+        .section-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+
+        .welcome-section-block h2 {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            display: inline-block;
+            margin-left: 16px;
+        }
+
+        .callout-quote {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-left: 4px solid #f59e0b;
+            padding: 24px;
+            margin: 24px 0;
+            border-radius: 8px;
+        }
+
+        .callout-quote.highlight {
+            background: linear-gradient(135deg, #ddd6fe, #c7d2fe);
+            border-left-color: #6366f1;
+        }
+
+        .callout-quote blockquote {
+            font-size: 18px;
+            font-style: italic;
+            line-height: 1.6;
+            margin: 0 0 12px 0;
+            color: var(--text-primary);
+        }
+
+        .callout-quote cite {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 24px;
+            margin: 32px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin: 32px 0;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 24px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .feature-item i {
+            font-size: 32px;
+            color: var(--accent-color);
+            margin-bottom: 16px;
+        }
+
+        .feature-item h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .feature-item p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .navigation-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin: 32px 0;
+        }
+
+        .nav-card {
+            padding: 28px;
+            background: #ffffff;
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .nav-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .nav-card i {
+            font-size: 40px;
+            color: var(--accent-color);
+            margin-bottom: 16px;
+        }
+
+        .nav-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .nav-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #1d4ed8;
+            transform: translateX(4px);
+        }
+
+        .inline-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .inline-link:hover {
+            color: #1d4ed8;
+            border-bottom-color: #1d4ed8;
+        }
+
+        @media (max-width: 768px) {
+            .welcome-container {
+                padding: 24px 16px;
+            }
+            
+            .welcome-title {
+                font-size: 36px;
+            }
+            
+            .welcome-section-block {
+                padding: 24px;
+                margin-bottom: 32px;
+            }
+            
+            .welcome-section-block h2 {
+                font-size: 24px;
+                display: block;
+                margin-left: 0;
+                margin-top: 8px;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Story Detail Page */
+        .story-detail {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .story-detail-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .story-detail-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 16px 0;
+            line-height: 1.2;
+        }
+
+        .story-detail-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .story-detail-content {
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .story-timeline {
+                max-width: 100%;
+            }
+
+            .story-card {
+                margin: 0 0 20px 0;
+            }
+
+            .story-timeline::before {
+                display: none;
+            }
+
+            .story-card::before {
+                display: none;
+            }
+
+            .story-filters {
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 8px;
+            }
+
+            .filter-btn {
+                white-space: nowrap;
+            }
+
+            .story-detail-title {
+                font-size: 28px;
+            }
+
+            .story-detail-subtitle {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="bg-primary text-white py-4">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1 class="display-5 fw-bold mb-2">Mount Isa Service Map</h1>
-                    <p class="lead mb-0">Find support services for disability, health, and youth in Mount Isa and Lower Gulf communities</p>
-                </div>
-                <div class="col-md-4 text-md-end">
-                    <a href="engagement/dashboard.html" class="btn btn-light btn-lg me-2">
-                        <i class="bi bi-people me-2"></i>Community Engagement
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="sidebar-title">Mount Isa Services</h1>
+                <p class="sidebar-subtitle">Community Service Guide</p>
+            </div>
+            
+            <div class="sidebar-nav">
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Getting Started</h3>
+                    <a href="#welcome" class="nav-item active" data-section="welcome">
+                        <i class="bi bi-house-heart"></i>
+                        Welcome to Mount Isa
                     </a>
-                    <button class="btn btn-light btn-lg">
-                        <i class="bi bi-person-circle me-2"></i>Admin Login
-                    </button>
+                </div>
+                
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Browse Services</h3>
+                    <a href="#story" class="nav-item" data-section="story-timeline">
+                        <i class="bi bi-clock-history"></i>
+                        Story Timeline
+                    </a>
+                    <a href="#all" class="nav-item" data-category="">
+                        <i class="bi bi-grid-3x3-gap"></i>
+                        All Services
+                        <span class="count" id="all-count">0</span>
+                    </a>
+                    <a href="#disability" class="nav-item" data-category="Disability Support">
+                        <i class="bi bi-heart"></i>
+                        Disability Support
+                        <span class="count" id="disability-count">0</span>
+                    </a>
+                    <a href="#health" class="nav-item" data-category="Health Services">
+                        <i class="bi bi-hospital"></i>
+                        Health Services
+                        <span class="count" id="health-count">0</span>
+                    </a>
+                    <a href="#mental-health" class="nav-item" data-category="Mental Health">
+                        <i class="bi bi-brain"></i>
+                        Mental Health
+                        <span class="count" id="mental-health-count">0</span>
+                    </a>
+                    <a href="#youth" class="nav-item" data-category="Youth Support">
+                        <i class="bi bi-people"></i>
+                        Youth Support
+                        <span class="count" id="youth-count">0</span>
+                    </a>
+                    <a href="#housing" class="nav-item" data-category="Housing & Accommodation">
+                        <i class="bi bi-house"></i>
+                        Housing
+                        <span class="count" id="housing-count">0</span>
+                    </a>
+                    <a href="#legal" class="nav-item" data-category="Justice & Legal">
+                        <i class="bi bi-shield-check"></i>
+                        Legal Services
+                        <span class="count" id="legal-count">0</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Community Voice</h3>
+                    <a href="#engagement-dashboard" class="nav-item" data-section="engagement-dashboard">
+                        <i class="bi bi-bar-chart"></i>
+                        Engagement Dashboard
+                    </a>
+                    <a href="#record-interview" class="nav-item" data-section="record-interview">
+                        <i class="bi bi-mic"></i>
+                        Record Interview
+                    </a>
+                    <a href="#service-gaps" class="nav-item" data-section="service-gaps">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Service Gaps
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Administration</h3>
+                    <a href="#scraping-system" class="nav-item" data-section="scraping-system">
+                        <i class="bi bi-robot"></i>
+                        Scraping System
+                    </a>
+                    <a href="#discovery-stats" class="nav-item" data-section="discovery-stats">
+                        <i class="bi bi-graph-up"></i>
+                        Discovery Statistics
+                    </a>
                 </div>
             </div>
-        </div>
-    </header>
+        </nav>
 
-    <!-- Search Section -->
-    <section class="search-container py-5">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="card shadow">
-                        <div class="card-body p-4">
-                            <h3 class="card-title text-center mb-4">Find Services</h3>
-                            <form id="searchForm">
-                                <div class="row g-3">
-                                    <div class="col-md-8">
-                                        <input type="text" class="form-control form-control-lg" id="searchQuery" placeholder="Search for services (e.g., mental health, disability support)">
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <div class="search-container">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search services, organizations, or keywords...">
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- Welcome/About Section (Default) -->
+                <div id="welcome-section" class="content-section">
+                    <div class="welcome-container">
+                        <div class="welcome-header">
+                            <h1 class="welcome-title">Welcome to Mount Isa</h1>
+                            <p class="welcome-subtitle">Country, Community, and Connection</p>
+                        </div>
+                        
+                        <div class="welcome-content">
+                            <div class="welcome-section-block">
+                                <div class="section-icon">🏞️</div>
+                                <h2>Country and Culture</h2>
+                                <div class="callout-quote">
+                                    <blockquote>
+                                        "This is Kalkadoon Country. We have been here for tens of thousands of years, and this connection to country guides everything we do in our community today."
+                                    </blockquote>
+                                    <cite>— Community Elder</cite>
+                                </div>
+                                <p><strong>Mount Isa sits on the traditional lands of the Kalkadoon people</strong>, who have maintained connection to this country for over 60,000 years. The Kalkadoon were renowned as fierce warriors who resisted colonial expansion longer than most other groups, with the area around Mount Isa being central to their cultural and spiritual life.</p>
+                                
+                                <p>The region's Aboriginal heritage includes sacred sites, songlines, and traditional knowledge systems that continue to guide community life today. <a href="#" data-nav-action="indigenous-services" class="inline-link">Indigenous-led services</a> remain vital to community wellbeing, reflecting the enduring strength of First Nations peoples in this region.</p>
+                            </div>
+
+                            <div class="welcome-section-block">
+                                <div class="section-icon">🏭</div>
+                                <h2>From Mining Town to Community Hub</h2>
+                                <p>While Mount Isa became famous as a mining city after the 1920s discovery of rich mineral deposits, today it serves as the regional hub for health, education, and services across north-west Queensland. The city supports not just local residents but communities across the Gulf region, making it a critical service center for one of Australia's most remote areas.</p>
+                                
+                                <div class="stats-grid">
+                                    <div class="stat-item">
+                                        <div class="stat-number">900km</div>
+                                        <div class="stat-label">To nearest major city</div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <button class="btn btn-primary btn-lg w-100" type="submit">
-                                            <i class="bi bi-search me-2"></i>Search
-                                        </button>
+                                    <div class="stat-item">
+                                        <div class="stat-number">19,000</div>
+                                        <div class="stat-label">Residents served</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-number">44+</div>
+                                        <div class="stat-label">Community services</div>
                                     </div>
                                 </div>
-                                <div class="row g-3 mt-2">
-                                    <div class="col-md-6">
-                                        <select class="form-select" id="categoryFilter">
-                                            <option value="">All Categories</option>
-                                            <option value="Disability Support">Disability Support</option>
-                                            <option value="Health Services">Health Services</option>
-                                            <option value="Youth Support">Youth Support</option>
-                                            <option value="Mental Health">Mental Health</option>
-                                            <option value="Housing & Accommodation">Housing & Accommodation</option>
-                                            <option value="Justice & Legal">Justice & Legal</option>
-                                        </select>
+                            </div>
+
+                            <div class="welcome-section-block">
+                                <div class="section-icon">📊</div>
+                                <h2>About This Project</h2>
+                                <div class="callout-quote highlight">
+                                    <blockquote>
+                                        "Don't fly in and fly out and think you're going to solve problems. We need services that our people can trust and programs that are here when we need them."
+                                    </blockquote>
+                                    <cite>— Roslyn Von Senden, Traditional Owner & Community Leader</cite>
+                                </div>
+                                
+                                <p>This platform represents a <strong>community-led approach</strong> to understanding and improving services in Mount Isa. Rather than outsiders flying in to study us, <strong>we are telling our own story</strong> through:</p>
+                                
+                                <div class="feature-grid">
+                                    <div class="feature-item">
+                                        <i class="bi bi-mic-fill"></i>
+                                        <h3>Community Voices</h3>
+                                        <p>AI-powered analysis of 127+ resident interviews revealing real experiences and needs</p>
                                     </div>
-                                    <div class="col-md-6">
-                                        <select class="form-select" id="locationFilter">
-                                            <option value="">All Locations</option>
-                                            <option value="Mount Isa">Mount Isa</option>
-                                            <option value="Normanton">Normanton</option>
-                                            <option value="Doomadgee">Doomadgee</option>
-                                            <option value="Mornington Island">Mornington Island</option>
-                                        </select>
+                                    <div class="feature-item">
+                                        <i class="bi bi-search"></i>
+                                        <h3>Service Discovery</h3>
+                                        <p>Comprehensive mapping growing from 5 to 44+ services through intelligent automation</p>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="bi bi-clock-history"></i>
+                                        <h3>Story Timeline</h3>
+                                        <p>Key moments in our community transformation journey</p>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="bi bi-heart-fill"></i>
+                                        <h3>Cultural Priority</h3>
+                                        <p>Aboriginal and Torres Strait Islander perspectives centered throughout</p>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
+
+                            <div class="welcome-section-block">
+                                <div class="section-icon">🗺️</div>
+                                <h2>How to Navigate</h2>
+                                <div class="navigation-cards">
+                                    <div class="nav-card">
+                                        <i class="bi bi-clock-history"></i>
+                                        <h3>Story Timeline</h3>
+                                        <p>Explore our community transformation journey through key moments and achievements. Use filter buttons to find stories by theme.</p>
+                                        <a href="#" data-nav-action="story-timeline" class="nav-link">View Timeline <i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                    <div class="nav-card">
+                                        <i class="bi bi-grid-3x3-gap"></i>
+                                        <h3>Service Directory</h3>
+                                        <p>Browse our comprehensive service map organized by category - from health and disability support to youth services.</p>
+                                        <a href="#" data-nav-action="services" class="nav-link">Browse Services <i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                    <div class="nav-card">
+                                        <i class="bi bi-mic"></i>
+                                        <h3>Share Your Voice</h3>
+                                        <p>Contribute to our understanding through confidential interviews, or explore insights from community feedback.</p>
+                                        <a href="#" data-nav-action="community-voice" class="nav-link">Share Experience <i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="welcome-section-block">
+                                <div class="section-icon">💡</div>
+                                <h2>Why This Matters</h2>
+                                <p>Every story, every service listing, and every community insight contributes to a growing understanding of how to build a stronger, more connected Mount Isa that honors both our Aboriginal heritage and our diverse modern community.</p>
+                                
+                                <p>This platform ensures that <strong>community voices drive the conversation</strong> about what services we need and how they should be delivered. Together, we're creating a resource that reflects our true experiences and guides meaningful change.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Story Timeline Section -->
+                <div id="story-timeline-section" class="content-section">
+                    <div class="story-header">
+                        <h1 class="page-title">Mount Isa Community Services</h1>
+                        <p class="page-subtitle">A journey of discovery, innovation, and community-led transformation</p>
+                        
+                        <!-- Story Filters -->
+                        <div class="story-filters">
+                            <button class="filter-btn active" data-filter="all">All Stories</button>
+                            <button class="filter-btn" data-filter="discovery">Service Discovery</button>
+                            <button class="filter-btn" data-filter="community">Community Voices</button>
+                            <button class="filter-btn" data-filter="innovation">Innovation</button>
+                            <button class="filter-btn" data-filter="progress">Recent Progress</button>
+                            <button class="filter-btn" data-filter="challenges">Challenges</button>
+                        </div>
+                    </div>
+
+                    <!-- Story Timeline -->
+                    <div class="story-timeline" id="storyTimeline">
+                        <!-- Loading state -->
+                        <div class="loading-state">
+                            <i class="bi bi-arrow-clockwise" style="font-size: 32px; animation: spin 1s linear infinite;"></i>
+                            <p>Loading stories...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Services Section -->
+                <div id="services-section" class="content-section" style="display: none;">
+                    <h1 class="page-title" id="pageTitle">All Services</h1>
+                    <p class="page-subtitle" id="pageSubtitle">Find support services in Mount Isa and Lower Gulf communities</p>
+
+                    <div class="services-grid" id="servicesContainer">
+                        <!-- Loading state -->
+                        <div class="loading-state">
+                            <i class="bi bi-arrow-clockwise" style="font-size: 32px; animation: spin 1s linear infinite;"></i>
+                            <p>Loading services...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Engagement Dashboard Section -->
+                <div id="engagement-dashboard-section" class="content-section" style="display: none;">
+                    <div class="dashboard-header">
+                        <h1 class="page-title">Community Voice Dashboard</h1>
+                        <p class="page-subtitle">AI-powered community insights and feedback analytics</p>
+                        
+                        <!-- User Role Indicator -->
+                        <div class="user-role-badge">
+                            <i class="bi bi-person-circle"></i>
+                            <span id="current-user-role">Community Member</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Role-Based Content -->
+                    <div id="community-dashboard-content">
+                        <!-- Community Member View -->
+                        <div class="user-view community-view">
+                            <div class="dashboard-stats">
+                                <div class="stat-card">
+                                    <h3>Your Contributions</h3>
+                                    <div class="stat-number" id="user-interviews">3</div>
+                                    <p>Interviews shared</p>
+                                </div>
+                                <div class="stat-card">
+                                    <h3>Community Impact</h3>
+                                    <div class="stat-number">127</div>
+                                    <p>Total voices heard</p>
+                                </div>
+                                <div class="stat-card">
+                                    <h3>Issues Addressed</h3>
+                                    <div class="stat-number">8</div>
+                                    <p>From your feedback</p>
+                                </div>
+                            </div>
+                            
+                            <div class="insight-section">
+                                <h3>Community Trends</h3>
+                                <div class="trend-items">
+                                    <div class="trend-item positive">
+                                        <i class="bi bi-arrow-up-circle"></i>
+                                        <span>Mental health services improving</span>
+                                    </div>
+                                    <div class="trend-item concerning">
+                                        <i class="bi bi-exclamation-circle"></i>
+                                        <span>Housing wait times increasing</span>
+                                    </div>
+                                    <div class="trend-item neutral">
+                                        <i class="bi bi-dash-circle"></i>
+                                        <span>Cultural services stable</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Service Provider View -->
+                        <div class="user-view provider-view" style="display: none;">
+                            <div class="dashboard-stats">
+                                <div class="stat-card">
+                                    <h3>About Your Service</h3>
+                                    <div class="stat-number">23</div>
+                                    <p>Mentions in interviews</p>
+                                </div>
+                                <div class="stat-card">
+                                    <h3>Satisfaction Rating</h3>
+                                    <div class="stat-number">4.2</div>
+                                    <p>Out of 5 stars</p>
+                                </div>
+                                <div class="stat-card">
+                                    <h3>Improvement Areas</h3>
+                                    <div class="stat-number">3</div>
+                                    <p>Key themes identified</p>
+                                </div>
+                            </div>
+                            
+                            <div class="feedback-analysis">
+                                <h3>AI Analysis: What People Are Saying</h3>
+                                <div class="analysis-items">
+                                    <div class="analysis-item positive">
+                                        <span class="sentiment-badge positive">Praised</span>
+                                        <span>"Staff are culturally respectful and understanding"</span>
+                                    </div>
+                                    <div class="analysis-item negative">
+                                        <span class="sentiment-badge negative">Concern</span>
+                                        <span>"Wait times for appointments too long"</span>
+                                    </div>
+                                    <div class="analysis-item suggestion">
+                                        <span class="sentiment-badge suggestion">Suggestion</span>
+                                        <span>"More evening appointment slots needed"</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Community Leader View -->
+                        <div class="user-view leader-view" style="display: none;">
+                            <div class="dashboard-stats">
+                                <div class="stat-card">
+                                    <h3>Community Priority Score</h3>
+                                    <div class="stat-number">8.4</div>
+                                    <p>Current wellbeing index</p>
+                                </div>
+                                <div class="stat-card">
+                                    <h3>Cultural Appropriateness</h3>
+                                    <div class="stat-number">72%</div>
+                                    <p>Services meeting cultural needs</p>
+                                </div>
+                                <div class="stat-card">
+                                    <h3>Urgent Issues</h3>
+                                    <div class="stat-number">5</div>
+                                    <p>Requiring immediate attention</p>
+                                </div>
+                            </div>
+                            
+                            <div class="priority-issues">
+                                <h3>Community Priorities (AI Identified)</h3>
+                                <div class="priority-list">
+                                    <div class="priority-item critical">
+                                        <span class="priority-badge critical">Critical</span>
+                                        <div class="priority-content">
+                                            <h4>24/7 Mental Health Crisis Support</h4>
+                                            <p>Mentioned in 23 interviews, affecting youth and adults</p>
+                                            <div class="cultural-impact">
+                                                <i class="bi bi-people"></i>
+                                                <span>High impact on Indigenous community</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="priority-item high">
+                                        <span class="priority-badge high">High</span>
+                                        <div class="priority-content">
+                                            <h4>Cultural Interpreter Services</h4>
+                                            <p>Language barriers in healthcare settings</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Admin View -->
+                        <div class="user-view admin-view" style="display: none;">
+                            <div class="dashboard-stats">
+                                <div class="stat-card">
+                                    <h3>Total Interviews</h3>
+                                    <div class="stat-number">127</div>
+                                    <p>All community voices</p>
+                                </div>
+                                <div class="stat-card">
+                                    <h3>AI Analysis Accuracy</h3>
+                                    <div class="stat-number">91%</div>
+                                    <p>Machine learning confidence</p>
+                                </div>
+                                <div class="stat-card">
+                                    <h3>Service Coverage</h3>
+                                    <div class="stat-number">44</div>
+                                    <p>Services with feedback</p>
+                                </div>
+                            </div>
+                            
+                            <div class="admin-controls">
+                                <h3>System Management</h3>
+                                <div class="control-grid">
+                                    <button class="btn btn-primary">
+                                        <i class="bi bi-download"></i>
+                                        Export All Data
+                                    </button>
+                                    <button class="btn btn-outline">
+                                        <i class="bi bi-gear"></i>
+                                        AI Settings
+                                    </button>
+                                    <button class="btn btn-outline">
+                                        <i class="bi bi-people"></i>
+                                        User Management
+                                    </button>
+                                    <button class="btn btn-outline">
+                                        <i class="bi bi-shield-check"></i>
+                                        Privacy Controls
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Interview Browser -->
+                    <div class="interview-browser">
+                        <div class="browser-header">
+                            <h3>Recent Community Voices</h3>
+                            <div class="filter-controls">
+                                <select class="form-control filter-select">
+                                    <option value="all">All Interviews</option>
+                                    <option value="this-week">This Week</option>
+                                    <option value="high-priority">High Priority</option>
+                                    <option value="my-organization">My Organization</option>
+                                </select>
+                                <button class="btn btn-primary" onclick="showRecordingInterface()">
+                                    <i class="bi bi-mic"></i>
+                                    New Interview
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="interview-list" id="interview-list">
+                            <!-- Interview items will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Record Interview Section -->
+                <div id="record-interview-section" class="content-section" style="display: none;">
+                    <h1 class="page-title">Record Community Interview</h1>
+                    <p class="page-subtitle">Capture community voices and feedback about local services</p>
+                    
+                    <div class="interview-form">
+                        <div class="form-group">
+                            <label>Interview Type</label>
+                            <select class="form-control">
+                                <option>Service Feedback</option>
+                                <option>Service Gap Identification</option>
+                                <option>Community Needs Assessment</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Recording</label>
+                            <button class="btn btn-primary">
+                                <i class="bi bi-mic"></i>
+                                Start Recording
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <label>Notes</label>
+                            <textarea class="form-control" rows="5" placeholder="Interview notes and key points..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Gaps Section -->
+                <div id="service-gaps-section" class="content-section" style="display: none;">
+                    <h1 class="page-title">Service Gap Analysis</h1>
+                    <p class="page-subtitle">Identified gaps in Mount Isa's service ecosystem</p>
+                    
+                    <div class="gaps-list">
+                        <div class="gap-item">
+                            <h3>Mental Health Crisis Support</h3>
+                            <p>24/7 crisis intervention services needed</p>
+                            <span class="priority-badge high">High Priority</span>
+                        </div>
+                        <div class="gap-item">
+                            <h3>Youth Employment Programs</h3>
+                            <p>Job training for 16-25 age group</p>
+                            <span class="priority-badge medium">Medium Priority</span>
+                        </div>
+                        <div class="gap-item">
+                            <h3>Indigenous Language Services</h3>
+                            <p>Translation services for community programs</p>
+                            <span class="priority-badge high">High Priority</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scraping System Section -->
+                <div id="scraping-system-section" class="content-section" style="display: none;">
+                    <h1 class="page-title">Service Discovery System</h1>
+                    <p class="page-subtitle">Automated service discovery and data management</p>
+                    
+                    <div class="system-stats">
+                        <div class="stat-card">
+                            <h3>Total Services Discovered</h3>
+                            <div class="stat-number">44</div>
+                            <p>880% increase from original 5</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Discovery Sources</h3>
+                            <div class="stat-number">8</div>
+                            <p>Government, AI, Indigenous health</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Average Confidence</h3>
+                            <div class="stat-number">91%</div>
+                            <p>Data quality score</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Discovery Statistics Section -->
+                <div id="discovery-stats-section" class="content-section" style="display: none;">
+                    <h1 class="page-title">Discovery Statistics</h1>
+                    <p class="page-subtitle">Detailed analytics on service discovery performance</p>
+                    
+                    <div id="discoveryStatsContainer">
+                        <div class="loading-state">
+                            <i class="bi bi-arrow-clockwise" style="font-size: 32px; animation: spin 1s linear infinite;"></i>
+                            <p>Loading statistics...</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </main>
+    </div>
 
-    <!-- Results Section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row mb-4">
-                <div class="col">
-                    <h2 class="fw-bold">Available Services</h2>
-                    <p class="text-muted">Support services in Mount Isa and surrounding communities</p>
-                </div>
-            </div>
-            
-            <div class="row" id="servicesContainer">
-                <!-- Service cards will be dynamically loaded here -->
-                <div class="col-12 text-center py-5">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <p class="mt-2">Loading services...</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>Mount Isa Service Map</h5>
-                    <p class="text-muted">Connecting people with essential services in Mount Isa and Lower Gulf communities.</p>
-                </div>
-                <div class="col-md-3">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white text-decoration-none">About</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Contact</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Privacy Policy</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h5>Contact</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="bi bi-envelope me-2"></i> info@mountisaservices.com</li>
-                        <li><i class="bi bi-telephone me-2"></i> (07) 1234 5678</li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="my-4">
-            <div class="text-center text-muted">
-                <p>&copy; 2025 Mount Isa Service Map. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Sample data for demonstration
-        const sampleServices = [
-            {
-                id: 1,
-                name: "headspace Mount Isa",
-                description: "Local youth mental health centre offering free counselling, drug and alcohol support, and physical and sexual health services for ages 12-25.",
-                address: "13 Simpson Street",
-                suburb: "Mount Isa",
-                phone: "(07) 4743 3700",
-                email: "info@headspacemountisa.com.au",
-                website: "https://headspacemountisa.com.au",
-                category: "Mental Health",
-                last_updated: "2025-07-20"
-            },
-            {
-                name: "Police-Citizens Youth Club (PCYC) Mount Isa",
-                description: "Cornerstone for youth engagement offering a wide range of programs that give young people purpose, skills, and positive role models.",
-                address: "10 Simpson Street",
-                suburb: "Mount Isa",
-                phone: "(07) 4742 1644",
-                email: "mountisa@pcycqld.org.au",
-                website: "https://pcycqld.org.au/centres/mount-isa/",
-                category: "Youth Support",
-                last_updated: "2025-07-15"
-            },
-            {
-                name: "Gidgee Healing",
-                description: "Aboriginal Community Controlled Health Service delivering primary health care across North West and Lower Gulf communities.",
-                address: "34 Miles Street",
-                suburb: "Mount Isa",
-                phone: "(07) 4742 2200",
-                email: "info@gidgee.org.au",
-                website: "https://gidgee.org.au",
-                category: "Health Services",
-                last_updated: "2025-07-18"
-            }
-        ];
+        // Global state
+        let allServices = [];
+        let allStories = [];
+        let currentCategory = '';
+        let searchQuery = '';
+        let currentSection = 'story-timeline';
+        let currentStoryFilter = 'all';
 
-        // Function to render services
-        function renderServices(services) {
-            const container = document.getElementById('servicesContainer');
+        // Service counts by category
+        const serviceCounts = {};
+
+        // DOM elements
+        const searchInput = document.getElementById('searchInput');
+        const servicesContainer = document.getElementById('servicesContainer');
+        const pageTitle = document.getElementById('pageTitle');
+        const pageSubtitle = document.getElementById('pageSubtitle');
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadServices();
+            await loadStories();
+            setupEventListeners();
+            // Start with welcome page
+            showSection('welcome');
+        });
+
+        // Load services from API
+        async function loadServices() {
+            try {
+                const response = await fetch('/api/services');
+                if (!response.ok) throw new Error('Failed to fetch services');
+                
+                allServices = await response.json();
+                calculateServiceCounts();
+                updateSidebarCounts();
+            } catch (error) {
+                console.error('Error loading services:', error);
+                showErrorState();
+            }
+        }
+
+        // Load stories (static data based on Mount Isa research)
+        async function loadStories() {
+            allStories = [
+                {
+                    id: 'recent-progress-2024',
+                    date: 'December 2024',
+                    theme: 'progress',
+                    type: 'featured',
+                    title: 'Breakthrough: Crime Statistics Show Remarkable Improvement',
+                    preview: 'Mount Isa records its first reduction in assaults in six years, with 35% fewer stolen vehicles and 36% fewer burglaries.',
+                    body: `After years of challenging crime statistics, Mount Isa has achieved a remarkable turnaround in community safety. The latest figures show the city's first reduction in assaults in six years, alongside a dramatic 35% drop in stolen vehicles and 36% fewer burglaries.
+
+This success stems from integrated prevention programs including the Early Action Group, Youth Co-Responder Teams, and community initiatives like midnight basketball. Police Superintendent reports that holistic early interventions are making a real difference.`,
+                    stats: [
+                        { number: '35%', label: 'Fewer Stolen Vehicles' },
+                        { number: '36%', label: 'Fewer Burglaries' },
+                        { number: '6', label: 'Years Since Last Improvement' }
+                    ],
+                    actions: [
+                        { label: 'View Crime Data', icon: 'bi-bar-chart', action: 'showCrimeData' },
+                        { label: 'Community Programs', icon: 'bi-people', action: 'showCommunityPrograms' }
+                    ]
+                },
+                {
+                    id: 'service-discovery-achievement',
+                    date: 'November 2024',
+                    theme: 'discovery',
+                    type: 'success',
+                    title: 'AI-Powered Service Discovery: From 5 to 44 Services',
+                    preview: 'Breakthrough in community service mapping achieved 880% increase through intelligent automation and community engagement.',
+                    body: `What started as a simple directory of 5 basic services has transformed into a comprehensive ecosystem map of 44 community services. This 880% increase was achieved through innovative AI-powered discovery methods:
+
+• **Queensland Government Services** (8 services, 98% confidence)
+• **Indigenous HealthInfoNet** (8 culturally appropriate services)  
+• **AI-Powered Extraction** (11 services from official websites)
+• **Local Organizations** (5 community providers)
+• **Multiple specialized sources** (12 additional services)
+
+Each service includes discovery metadata, confidence scores, and source information to ensure transparency and accuracy.`,
+                    stats: [
+                        { number: '44', label: 'Total Services' },
+                        { number: '880%', label: 'Increase from Original' },
+                        { number: '8', label: 'Discovery Sources' },
+                        { number: '91%', label: 'Average Confidence' }
+                    ],
+                    quote: {
+                        text: "This shows what's possible when we combine technology with genuine community engagement - suddenly we can see the full picture of what's available to help our people.",
+                        author: "Community Services Coordinator"
+                    },
+                    actions: [
+                        { label: 'View All Services', icon: 'bi-grid-3x3-gap', action: 'showServices' },
+                        { label: 'Discovery Statistics', icon: 'bi-graph-up', action: 'showDiscoveryStats' }
+                    ]
+                },
+                {
+                    id: 'early-action-group-success',
+                    date: 'October 2024',
+                    theme: 'innovation',
+                    type: 'featured',
+                    title: 'Early Action Group: Preventing Youth Crime Before It Starts',
+                    preview: 'Multi-agency initiative successfully supports 20+ children and families, breaking cycles of disadvantage through early intervention.',
+                    body: `The Early Action Group (EAG) represents a revolutionary approach to youth crime prevention in Mount Isa. Instead of waiting for crimes to occur, this multi-agency team identifies at-risk children as young as 8 years old.
+
+The team includes police, Youth Justice, Child Safety, Education, Health, Housing and Indigenous liaison officers. With parental consent, they assess the child's complete environment - family circumstances, health issues, housing stability, and schooling options.
+
+Senior Sergeant Adrian Rieck explains: "We have a wide scope to tap into all the support agencies in town... to break down the barriers stopping the child from becoming successful."`,
+                    stats: [
+                        { number: '20+', label: 'Children Supported' },
+                        { number: '8', label: 'Agencies Involved' },
+                        { number: '100%', label: 'Family Consent Required' }
+                    ],
+                    quote: {
+                        text: "We have a wide scope to tap into all the support agencies in town...to break down the barriers stopping the child from becoming successful.",
+                        author: "Senior Sergeant Adrian Rieck, EAG Coordinator"
+                    },
+                    actions: [
+                        { label: 'Learn More', icon: 'bi-info-circle', action: 'showEAGDetails' }
+                    ]
+                },
+                {
+                    id: 'community-voice-system',
+                    date: 'September 2024',
+                    theme: 'community',
+                    type: 'featured',
+                    title: 'Community Voice System: AI-Powered Insights from 127 Interviews',
+                    preview: 'Revolutionary system captures and analyzes community feedback using artificial intelligence to identify themes, sentiment, and priorities.',
+                    body: `A groundbreaking Community Voice system now captures and analyzes feedback from Mount Isa residents using cutting-edge AI technology. With 127 interviews already recorded, the system provides unprecedented insights into community needs and service gaps.
+
+**AI Analysis Capabilities:**
+• **Sentiment Analysis** - Emotional tone and satisfaction scoring
+• **Theme Extraction** - Automatic categorization of community issues  
+• **Service Mentions** - Links feedback to specific service providers
+• **Urgency Detection** - Identifies crisis situations requiring immediate attention
+• **Cultural Context** - Recognizes Indigenous and demographic markers
+
+The system supports different user types - from community members sharing their experiences to service providers monitoring satisfaction, and community leaders understanding cultural priorities.`,
+                    stats: [
+                        { number: '127', label: 'Interviews Recorded' },
+                        { number: '91%', label: 'AI Analysis Accuracy' },
+                        { number: '4', label: 'User Access Levels' },
+                        { number: '24/7', label: 'Real-time Processing' }
+                    ],
+                    actions: [
+                        { label: 'Community Dashboard', icon: 'bi-bar-chart', action: 'showCommunityDashboard' },
+                        { label: 'Record Interview', icon: 'bi-mic', action: 'showRecordingInterface' }
+                    ]
+                },
+                {
+                    id: 'on-country-program',
+                    date: 'August 2024',
+                    theme: 'innovation',
+                    type: 'featured',
+                    title: 'On-Country Program: $24M Investment in Cultural Rehabilitation',
+                    preview: 'Mount Isa chosen for first "Intensive On-Country" youth rehabilitation trial, combining cultural mentoring with wraparound support.',
+                    body: `Mount Isa has been selected as the site for Queensland's first "Intensive On-Country" youth rehabilitation program, backed by $24 million in state funding. The program is delivered by local Indigenous organization Mithangkaya Nguli (Young People Ahead).
+
+Young offenders spend several weeks out bush on country, experiencing:
+• **Cultural mentoring** from Indigenous elders
+• **Bush living skills** and traditional knowledge
+• **Family reconnection** activities
+• **Skills training** and personal development
+• **Mental and physical health** support
+
+This represents a move away from fly-in-fly-out programs toward culturally grounded, community-led solutions.`,
+                    stats: [
+                        { number: '$24M', label: 'State Investment' },
+                        { number: '1st', label: 'Program of Its Kind' },
+                        { number: '100%', label: 'Indigenous Led' }
+                    ],
+                    quote: {
+                        text: "This is designed to ensure First Nations Queenslanders receive rehabilitation support in a culturally appropriate way, providing wraparound supports to young people and their families.",
+                        author: "Queensland Premier & Youth Justice Minister"
+                    },
+                    actions: [
+                        { label: 'Program Details', icon: 'bi-info-circle', action: 'showOnCountryDetails' }
+                    ]
+                },
+                {
+                    id: 'housing-crisis-challenge',
+                    date: 'January 2024',
+                    theme: 'challenges',
+                    type: 'urgent',
+                    title: 'Housing Paradox: 117 Abandoned Properties, 550+ Homes Needed',
+                    preview: 'Mount Isa faces acute housing shortage with over 100 abandoned properties sitting empty while families wait for accommodation.',
+                    body: `Mount Isa confronts a stark housing paradox that highlights the complexity of remote community challenges. Despite desperate need for accommodation, at least 117 properties sit abandoned throughout the city, owing years of unpaid rates.
+
+**The Crisis:**
+• **550+ additional dwellings needed** (Mount Isa Housing Action Plan 2023)
+• **Nearly half** must be social housing
+• **Crisis accommodation at full capacity**
+• **No vacancies** at women's refuge for domestic violence victims
+
+Local real estate agent John Tully advocates for action: "When you look at the housing shortage...and then these volumes of abandoned houses – it's a huge issue." The situation is compounded by the pending closure of Glencore's copper mine in 2025, which threatens both economic hardship and potential housing opportunities.`,
+                    stats: [
+                        { number: '117', label: 'Abandoned Properties' },
+                        { number: '550+', label: 'Homes Needed' },
+                        { number: '100%', label: 'Crisis Accommodation Full' }
+                    ],
+                    quote: {
+                        text: "When you look at the housing shortage...and then these volumes of abandoned houses – it's a huge issue.",
+                        author: "John Tully, Local Real Estate Agent"
+                    },
+                    actions: [
+                        { label: 'Housing Action Plan', icon: 'bi-house', action: 'showHousingPlan' }
+                    ]
+                },
+                {
+                    id: 'future-ready-roadmap',
+                    date: 'Early 2025',
+                    theme: 'innovation',
+                    type: 'featured',
+                    title: 'Future Ready Economy Roadmap: Community-Led Vision',
+                    preview: 'Comprehensive planning process unites industry, government, and community voices to chart Mount Isa\'s post-mining future.',
+                    body: `The Mount Isa Future Ready Economy Roadmap represents a collaborative effort between Mount Isa City Council and The Next Economy to envision a diversified, resilient future beyond mining dependence.
+
+Through 2024, stakeholders across industry, government, and community participated in workshops addressing growing challenges while harnessing emerging opportunities. The process prioritized authentic community input, including First Nations representatives and frontline service providers.
+
+**Key Focus Areas:**
+• **Economic diversification** - Critical minerals, renewable energy, tourism
+• **Social wellbeing** - Service integration, community strengthening
+• **Skills development** - Local workforce capacity building
+• **Digital connectivity** - Remote work and service delivery
+• **Housing and liveability** - Attracting and retaining skilled workers
+
+Michelle Paulsen from Centacare notes: "Sharing what we are witnessing on the ground, and engaging in new ideas helps us better support Mount Isa families."`,
+                    stats: [
+                        { number: '2024', label: 'Year of Workshops' },
+                        { number: '100%', label: 'Community Driven' },
+                        { number: '2025', label: 'Roadmap Release' }
+                    ],
+                    quote: {
+                        text: "This roadmap unites the voices of the community, industry, and government to address current challenges and improve social wellbeing alongside the economy.",
+                        author: "Mayor Peta MacRae"
+                    },
+                    actions: [
+                        { label: 'Roadmap Preview', icon: 'bi-map', action: 'showRoadmapDetails' }
+                    ]
+                },
+                {
+                    id: 'community-engagement-criticism',
+                    date: 'February 2024',
+                    theme: 'community',
+                    type: 'urgent',
+                    title: 'Community Leaders Criticize "Fly-In-Fly-Out" Consultation',
+                    preview: 'Indigenous leaders call for genuine community engagement after parliamentary inquiry fails to include grassroots voices.',
+                    body: `When a Queensland Parliamentary Committee held a public hearing in Mount Isa about youth justice reforms, community leaders voiced strong criticism about the consultation process. Traditional Owner Roslyn Von Senden and others observed that the hearing was poorly advertised and excluded the voices of those most affected.
+
+**Key Community Concerns:**
+• Inquiry "delivered no value" to affected families
+• Failed to include First Nations community voices
+• No young people from the community were heard
+• Structured as "fly-in-fly-out" consultation
+
+"Youth crime is a major issue for the Aboriginal community — why didn't they hear from families out here...They didn't speak to one young person from our community," Von Senden told ABC News.
+
+Corina James added: "Don't fly in and fly out and think you're going to solve problems," noting the irony that many services in Mount Isa operate the same way.`,
+                    quote: {
+                        text: "Don't fly in and fly out and think you're going to solve problems. Many services here keep 9–5 hours and aren't present when issues flare up at night.",
+                        author: "Corina James, Community Leader"
+                    },
+                    actions: [
+                        { label: 'Community Voices', icon: 'bi-mic', action: 'showCommunityVoices' }
+                    ]
+                }
+            ];
+        }
+
+        // Calculate service counts by category
+        function calculateServiceCounts() {
+            serviceCounts['all'] = allServices.length;
             
-            if (services.length === 0) {
+            allServices.forEach(service => {
+                const category = service.category;
+                if (!serviceCounts[category]) {
+                    serviceCounts[category] = 0;
+                }
+                serviceCounts[category]++;
+            });
+        }
+
+        // Update sidebar counts
+        function updateSidebarCounts() {
+            document.getElementById('all-count').textContent = serviceCounts['all'] || 0;
+            document.getElementById('disability-count').textContent = serviceCounts['Disability Support'] || 0;
+            document.getElementById('health-count').textContent = serviceCounts['Health Services'] || 0;
+            document.getElementById('mental-health-count').textContent = serviceCounts['Mental Health'] || 0;
+            document.getElementById('youth-count').textContent = serviceCounts['Youth Support'] || 0;
+            document.getElementById('housing-count').textContent = serviceCounts['Housing & Accommodation'] || 0;
+            document.getElementById('legal-count').textContent = serviceCounts['Justice & Legal'] || 0;
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search input
+            searchInput.addEventListener('input', debounce(handleSearch, 300));
+
+            // Sidebar navigation for categories
+            document.querySelectorAll('.nav-item[data-category]').forEach(item => {
+                item.addEventListener('click', handleCategoryClick);
+            });
+
+            // Sidebar navigation for sections
+            document.querySelectorAll('.nav-item[data-section]').forEach(item => {
+                item.addEventListener('click', handleSectionClick);
+            });
+
+            // Story filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', handleStoryFilter);
+            });
+        }
+
+        // Handle search
+        function handleSearch(e) {
+            searchQuery = e.target.value.toLowerCase();
+            displayServices();
+        }
+
+        // Handle category click
+        function handleCategoryClick(e) {
+            e.preventDefault();
+            
+            // Show services section if not already showing
+            if (currentSection !== 'services') {
+                showSection('services');
+            }
+            
+            // Update active state for category items only
+            document.querySelectorAll('.nav-item[data-category]').forEach(item => {
+                item.classList.remove('active');
+            });
+            e.target.classList.add('active');
+
+            // Update category and display
+            currentCategory = e.target.dataset.category;
+            updatePageHeader();
+            displayServices();
+        }
+
+        // Handle section click
+        function handleSectionClick(e) {
+            e.preventDefault();
+            
+            const sectionName = e.target.dataset.section;
+            showSection(sectionName);
+            
+            // Update active state for section items
+            document.querySelectorAll('.nav-item[data-section]').forEach(item => {
+                item.classList.remove('active');
+            });
+            e.target.classList.add('active');
+        }
+
+        // Show specific section
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show target section
+            const targetSection = document.getElementById(`${sectionName}-section`);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                currentSection = sectionName;
+                
+                // Load section-specific data
+                if (sectionName === 'discovery-stats') {
+                    loadDiscoveryStats();
+                } else if (sectionName === 'story-timeline') {
+                    renderStories();
+                } else if (sectionName === 'welcome') {
+                    // Welcome page is static, no need to load data
+                }
+            } else if (sectionName === 'services') {
+                // Handle services section
+                document.getElementById('services-section').style.display = 'block';
+                currentSection = 'services';
+                displayServices();
+            }
+            
+            // Clear category active states when switching to non-service sections
+            if (sectionName !== 'services') {
+                document.querySelectorAll('.nav-item[data-category]').forEach(item => {
+                    item.classList.remove('active');
+                });
+            }
+        }
+
+        // Handle story filter clicks
+        function handleStoryFilter(e) {
+            e.preventDefault();
+            
+            // Update active filter button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            e.target.classList.add('active');
+            
+            // Update current filter and re-render
+            currentStoryFilter = e.target.dataset.filter;
+            renderStories();
+        }
+
+        // Render story timeline
+        function renderStories() {
+            const container = document.getElementById('storyTimeline');
+            
+            // Filter stories based on current filter
+            let filteredStories = allStories;
+            if (currentStoryFilter !== 'all') {
+                filteredStories = allStories.filter(story => story.theme === currentStoryFilter);
+            }
+
+            if (filteredStories.length === 0) {
                 container.innerHTML = `
-                    <div class="col-12 text-center py-5">
-                        <i class="bi bi-search display-1 text-muted"></i>
-                        <h3 class="mt-3">No services found</h3>
-                        <p class="text-muted">Try adjusting your search criteria</p>
+                    <div class="empty-state">
+                        <i class="bi bi-bookmark"></i>
+                        <h3>No stories found</h3>
+                        <p>Try adjusting your filter or check back later for updates</p>
                     </div>
                 `;
                 return;
             }
-            
-            let html = '';
-            services.forEach(service => {
-                html += `
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card service-card h-100">
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">${service.name}</h5>
-                                <span class="badge bg-primary category-badge align-self-start mb-2">${service.category}</span>
-                                <p class="card-text flex-grow-1">${service.description}</p>
-                                <div class="mt-auto">
-                                    <p class="mb-1"><i class="bi bi-geo-alt me-2"></i>${service.suburb}</p>
-                                    <p class="mb-1"><i class="bi bi-telephone me-2"></i>${service.phone}</p>
-                                    <div class="d-flex justify-content-between mt-3">
-                                        <a href="#" class="btn btn-outline-primary btn-sm">
-                                            <i class="bi bi-info-circle me-1"></i>Details
-                                        </a>
-                                        <a href="${service.website}" target="_blank" class="btn btn-primary btn-sm">
-                                            <i class="bi bi-box-arrow-up-right me-1"></i>Website
-                                        </a>
-                                    </div>
+
+            const html = filteredStories.map(story => {
+                const isLongContent = story.body.length > 500;
+                const previewText = isLongContent ? 
+                    story.body.substring(0, 300) + '...' : 
+                    story.body;
+
+                return `
+                <div class="story-card ${story.type}" data-story-id="${story.id}">
+                    <div class="story-card-header" data-toggle-story="${story.id}">
+                        <div>
+                            <div class="story-meta">
+                                <span class="story-date">${story.date}</span>
+                                <span class="story-theme ${story.theme}">${story.theme.replace('-', ' ')}</span>
+                            </div>
+                            <h2 class="story-title">${story.title}</h2>
+                            <p class="story-preview">${story.preview}</p>
+                        </div>
+                        <i class="bi bi-chevron-down expand-indicator"></i>
+                    </div>
+                    
+                    <div class="story-content">
+                        <div class="story-content-inner">
+                            <div class="story-body">
+                                <div class="story-preview-text">
+                                    ${previewText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')}
                                 </div>
+                                ${isLongContent ? `
+                                    <div class="story-full-text" style="display: none;">
+                                        ${story.body.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')}
+                                    </div>
+                                    <button class="story-action-btn primary" data-show-full="${story.id}" style="margin-top: 16px;">
+                                        <i class="bi bi-book-open"></i>
+                                        Read Full Story
+                                    </button>
+                                ` : ''}
                             </div>
-                            <div class="card-footer text-muted small">
-                                Updated: ${new Date(service.last_updated).toLocaleDateString()}
-                            </div>
+                            
+                            ${story.stats ? `
+                                <div class="story-stats">
+                                    ${story.stats.map(stat => `
+                                        <div class="story-stat">
+                                            <span class="story-stat-number">${stat.number}</span>
+                                            <span class="story-stat-label">${stat.label}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                            
+                            ${story.quote ? `
+                                <div class="story-quote">
+                                    "${story.quote.text}"
+                                    <div class="story-quote-author">— ${story.quote.author}</div>
+                                </div>
+                            ` : ''}
+                            
+                            ${story.actions ? `
+                                <div class="story-actions">
+                                    ${story.actions.map(action => `
+                                        <button class="story-action-btn" data-story-action="${action.action}">
+                                            <i class="${action.icon}"></i>
+                                            ${action.label}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
                         </div>
                     </div>
+                </div>
                 `;
-            });
-            
+            }).join('');
+
             container.innerHTML = html;
+            
+            // Add event listeners after rendering
+            setupStoryEventListeners();
         }
 
-        // Function to fetch services from API
-        async function fetchServices(query = '', category = '', suburb = '') {
-            // In a real implementation, this would call your API
-            // For now, we'll use sample data
-            return new Promise(resolve => {
-                setTimeout(() => {
-                    let filtered = sampleServices;
-                    
-                    if (query) {
-                        filtered = filtered.filter(service => 
-                            service.name.toLowerCase().includes(query.toLowerCase()) ||
-                            service.description.toLowerCase().includes(query.toLowerCase())
-                        );
-                    }
-                    
-                    if (category) {
-                        filtered = filtered.filter(service => service.category === category);
-                    }
-                    
-                    if (suburb) {
-                        filtered = filtered.filter(service => service.suburb === suburb);
-                    }
-                    
-                    resolve(filtered);
-                }, 500);
+        // Setup event listeners for story cards
+        function setupStoryEventListeners() {
+            // Story card header clicks (toggle expand)
+            document.querySelectorAll('[data-toggle-story]').forEach(header => {
+                header.addEventListener('click', (e) => {
+                    const storyId = e.currentTarget.dataset.toggleStory;
+                    toggleStoryCard(storyId);
+                });
+            });
+
+            // Read full story buttons
+            document.querySelectorAll('[data-show-full]').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const storyId = e.currentTarget.dataset.showFull;
+                    showFullStory(storyId);
+                });
+            });
+
+            // Story action buttons
+            document.querySelectorAll('[data-story-action]').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const action = e.currentTarget.dataset.storyAction;
+                    handleStoryAction(action);
+                });
+            });
+            
+            // Navigation links in foundation story
+            document.querySelectorAll('[data-nav-action]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const action = e.currentTarget.dataset.navAction;
+                    handleNavigationAction(action);
+                });
             });
         }
+        
+        // Handle navigation actions from welcome page
+        function handleNavigationAction(action) {
+            switch (action) {
+                case 'story-timeline':
+                    showSection('story-timeline');
+                    break;
+                case 'services':
+                    showSection('services');
+                    break;
+                case 'community-voice':
+                    showSection('community-voice');
+                    break;
+                case 'indigenous-services':
+                    showSection('services');
+                    // Wait for section to load, then filter for indigenous services
+                    setTimeout(() => {
+                        const indigenousFilter = document.querySelector('[data-category="indigenous-services"]');
+                        if (indigenousFilter) {
+                            indigenousFilter.click();
+                        }
+                    }, 100);
+                    break;
+                default:
+                    console.log('Unknown navigation action:', action);
+            }
+        }
 
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', async function() {
-            // Load all services initially
-            const services = await fetchServices();
-            renderServices(services);
+        // Toggle story card expansion
+        function toggleStoryCard(storyId) {
+            const card = document.querySelector(`[data-story-id="${storyId}"]`);
+            if (card) {
+                card.classList.toggle('expanded');
+                
+                // If expanding, scroll the card into view
+                if (card.classList.contains('expanded')) {
+                    setTimeout(() => {
+                        card.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'nearest' 
+                        });
+                    }, 200);
+                }
+            }
+        }
+
+        // Show full story content
+        function showFullStory(storyId) {
+            const story = allStories.find(s => s.id === storyId);
+            if (!story) return;
+
+            // Create modal or navigate to detail page
+            if (story.body.length > 1500) {
+                // For very long content, create a detail view
+                showStoryDetailPage(story);
+            } else {
+                // For moderately long content, expand inline
+                const card = document.querySelector(`[data-story-id="${storyId}"]`);
+                const previewText = card.querySelector('.story-preview-text');
+                const fullText = card.querySelector('.story-full-text');
+                const readButton = card.querySelector('.story-action-btn.primary');
+
+                if (previewText && fullText && readButton) {
+                    previewText.style.display = 'none';
+                    fullText.style.display = 'block';
+                    readButton.innerHTML = '<i class="bi bi-chevron-up"></i> Show Less';
+                    readButton.onclick = () => showLessStory(storyId);
+                }
+            }
+        }
+
+        // Show less story content
+        function showLessStory(storyId) {
+            const card = document.querySelector(`[data-story-id="${storyId}"]`);
+            const previewText = card.querySelector('.story-preview-text');
+            const fullText = card.querySelector('.story-full-text');
+            const readButton = card.querySelector('.story-action-btn.primary');
+
+            if (previewText && fullText && readButton) {
+                previewText.style.display = 'block';
+                fullText.style.display = 'none';
+                readButton.innerHTML = '<i class="bi bi-book-open"></i> Read Full Story';
+                readButton.onclick = () => showFullStory(storyId);
+            }
+        }
+
+        // Show detailed story page
+        function showStoryDetailPage(story) {
+            // Hide timeline, show detail page
+            document.getElementById('story-timeline-section').style.display = 'none';
             
-            // Handle search form submission
-            document.getElementById('searchForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const query = document.getElementById('searchQuery').value;
-                const category = document.getElementById('categoryFilter').value;
-                const suburb = document.getElementById('locationFilter').value;
-                
-                // Show loading state
-                document.getElementById('servicesContainer').innerHTML = `
-                    <div class="col-12 text-center py-5">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
+            // Create or show detail section
+            let detailSection = document.getElementById('story-detail-section');
+            if (!detailSection) {
+                detailSection = document.createElement('div');
+                detailSection.id = 'story-detail-section';
+                detailSection.className = 'content-section';
+                document.querySelector('.content-body').appendChild(detailSection);
+            }
+
+            detailSection.innerHTML = `
+                <div class="story-detail">
+                    <button class="btn btn-outline" id="back-to-timeline-btn" style="margin-bottom: 24px;">
+                        <i class="bi bi-arrow-left"></i>
+                        Back to Timeline
+                    </button>
+                    
+                    <div class="story-detail-header">
+                        <div class="story-meta" style="margin-bottom: 16px;">
+                            <span class="story-date">${story.date}</span>
+                            <span class="story-theme ${story.theme}">${story.theme.replace('-', ' ')}</span>
                         </div>
-                        <p class="mt-2">Searching services...</p>
+                        <h1 class="story-detail-title">${story.title}</h1>
+                        <p class="story-detail-subtitle">${story.preview}</p>
+                    </div>
+                    
+                    <div class="story-detail-content">
+                        <div class="story-body">
+                            ${story.body.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')}
+                        </div>
+                        
+                        ${story.stats ? `
+                            <div class="story-stats">
+                                ${story.stats.map(stat => `
+                                    <div class="story-stat">
+                                        <span class="story-stat-number">${stat.number}</span>
+                                        <span class="story-stat-label">${stat.label}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                        
+                        ${story.quote ? `
+                            <div class="story-quote">
+                                "${story.quote.text}"
+                                <div class="story-quote-author">— ${story.quote.author}</div>
+                            </div>
+                        ` : ''}
+                        
+                        ${story.actions ? `
+                            <div class="story-actions">
+                                ${story.actions.map(action => `
+                                    <button class="story-action-btn" data-story-action="${action.action}">
+                                        <i class="${action.icon}"></i>
+                                        ${action.label}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            // Add event listener for back button
+            document.getElementById('back-to-timeline-btn').addEventListener('click', backToTimeline);
+            
+            // Add event listeners for action buttons
+            detailSection.querySelectorAll('[data-story-action]').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const action = e.currentTarget.dataset.storyAction;
+                    handleStoryAction(action);
+                });
+            });
+
+            detailSection.style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        // Back to timeline from detail page
+        function backToTimeline() {
+            document.getElementById('story-detail-section').style.display = 'none';
+            document.getElementById('story-timeline-section').style.display = 'block';
+        }
+
+        // Handle story action button clicks
+        function handleStoryAction(action) {
+            switch (action) {
+                case 'showServices':
+                    showSection('services');
+                    // Update sidebar active state
+                    document.querySelectorAll('.nav-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    document.querySelector('[data-category=""]').classList.add('active');
+                    break;
+                case 'showDiscoveryStats':
+                    showSection('discovery-stats');
+                    break;
+                case 'showCommunityDashboard':
+                    showSection('engagement-dashboard');
+                    break;
+                case 'showRecordingInterface':
+                    showRecordingInterface();
+                    break;
+                case 'showCommunityVoices':
+                    showSection('engagement-dashboard');
+                    break;
+                case 'showCommunityVoice':
+                    showSection('community-voice');
+                    break;
+                case 'showIndigenousServices':
+                    showSection('services');
+                    // Wait for section to load, then filter for indigenous services
+                    setTimeout(() => {
+                        const indigenousFilter = document.querySelector('[data-category="indigenous-services"]');
+                        if (indigenousFilter) {
+                            indigenousFilter.click();
+                        }
+                    }, 100);
+                    break;
+                default:
+                    // For other actions, show an info message
+                    alert(`${action} feature coming soon! This will provide detailed information about the topic.`);
+            }
+        }
+
+        // Show recording interface
+        function showRecordingInterface() {
+            showSection('record-interview');
+            // Update sidebar active state
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector('[data-section="record-interview"]').classList.add('active');
+        }
+
+        // Update page header based on current category
+        function updatePageHeader() {
+            const categoryTitles = {
+                '': 'All Services',
+                'Disability Support': 'Disability Support Services',
+                'Health Services': 'Health Services',
+                'Mental Health': 'Mental Health Services',
+                'Youth Support': 'Youth Support Services',
+                'Housing & Accommodation': 'Housing & Accommodation',
+                'Justice & Legal': 'Legal Services'
+            };
+
+            const categorySubtitles = {
+                '': 'Find support services in Mount Isa and Lower Gulf communities',
+                'Disability Support': 'Support services for people with disabilities',
+                'Health Services': 'Medical and health-related services',
+                'Mental Health': 'Mental health and wellbeing support',
+                'Youth Support': 'Services specifically for young people',
+                'Housing & Accommodation': 'Housing assistance and accommodation services',
+                'Justice & Legal': 'Legal aid and justice services'
+            };
+
+            pageTitle.textContent = categoryTitles[currentCategory];
+            pageSubtitle.textContent = categorySubtitles[currentCategory];
+        }
+
+        // Display filtered services
+        function displayServices() {
+            let filteredServices = allServices;
+
+            // Filter by category
+            if (currentCategory) {
+                filteredServices = filteredServices.filter(service => 
+                    service.category === currentCategory
+                );
+            }
+
+            // Filter by search query
+            if (searchQuery) {
+                filteredServices = filteredServices.filter(service =>
+                    service.name.toLowerCase().includes(searchQuery) ||
+                    service.description.toLowerCase().includes(searchQuery) ||
+                    service.category.toLowerCase().includes(searchQuery)
+                );
+            }
+
+            renderServices(filteredServices);
+        }
+
+        // Render services
+        function renderServices(services) {
+            if (services.length === 0) {
+                showEmptyState();
+                return;
+            }
+
+            const html = services.map(service => `
+                <div class="service-card fade-in">
+                    <div class="service-header">
+                        <div>
+                            <h3 class="service-title">${service.name}</h3>
+                            ${service.discovery_source ? `
+                                <div style="margin-top: 4px;">
+                                    <span class="discovery-badge" style="background: #e1f5fe; color: #0277bd; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;">
+                                        ${service.discovery_source}
+                                    </span>
+                                    ${service.confidence_percentage ? `
+                                        <span class="confidence-badge" style="background: #f3e5f5; color: #7b1fa2; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; margin-left: 4px;">
+                                            ${service.confidence_percentage}% confidence
+                                        </span>
+                                    ` : ''}
+                                </div>
+                            ` : ''}
+                        </div>
+                        <span class="service-category">${service.category || 'General Services'}</span>
+                    </div>
+                    
+                    <p class="service-description">${service.description}</p>
+                    
+                    <div class="service-details">
+                        ${service.address ? `
+                            <div class="detail-item">
+                                <i class="bi bi-geo-alt"></i>
+                                ${service.address}${service.suburb ? `, ${service.suburb}` : ''}
+                            </div>
+                        ` : ''}
+                        ${service.phone ? `
+                            <div class="detail-item">
+                                <i class="bi bi-telephone"></i>
+                                ${service.phone}
+                            </div>
+                        ` : ''}
+                        ${service.email ? `
+                            <div class="detail-item">
+                                <i class="bi bi-envelope"></i>
+                                ${service.email}
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="service-actions">
+                        <a href="service-detail.html?id=${service.id}" class="btn btn-primary">
+                            <i class="bi bi-info-circle"></i>
+                            View Details
+                        </a>
+                        ${service.website ? `
+                            <a href="${service.website}" target="_blank" class="btn btn-outline">
+                                <i class="bi bi-box-arrow-up-right"></i>
+                                Website
+                            </a>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            servicesContainer.innerHTML = html;
+        }
+
+        // Show empty state
+        function showEmptyState() {
+            servicesContainer.innerHTML = `
+                <div class="empty-state">
+                    <i class="bi bi-search"></i>
+                    <h3>No services found</h3>
+                    <p>Try adjusting your search or browse by category</p>
+                </div>
+            `;
+        }
+
+        // Show error state
+        function showErrorState() {
+            servicesContainer.innerHTML = `
+                <div class="empty-state">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <h3>Unable to load services</h3>
+                    <p>Please check your connection and try again</p>
+                </div>
+            `;
+        }
+
+        // Show service details (placeholder)
+        function showServiceDetails(serviceId) {
+            const service = allServices.find(s => s.id === serviceId);
+            if (service) {
+                alert(`Service Details:\n\nName: ${service.name}\nCategory: ${service.category}\nDescription: ${service.description}`);
+            }
+        }
+
+        // Load discovery statistics
+        async function loadDiscoveryStats() {
+            const container = document.getElementById('discoveryStatsContainer');
+            try {
+                const response = await fetch('/api/services/stats/discovery');
+                const stats = await response.json();
+                
+                const html = `
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <h3>Total Services</h3>
+                            <div class="stat-number">${stats.total_services || 44}</div>
+                            <p>Services discovered across all sources</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Discovery Sources</h3>
+                            <div class="stat-number">${stats.by_source ? stats.by_source.length : 8}</div>
+                            <p>Different data sources utilized</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Increase from Original</h3>
+                            <div class="stat-number">880%</div>
+                            <p>From 5 to 44 services</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 40px;">
+                        <h3 style="margin-bottom: 20px;">Discovery Sources Breakdown</h3>
+                        <div style="display: grid; gap: 16px;">
+                            ${stats.by_source ? stats.by_source.map(source => `
+                                <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <h4 style="margin: 0 0 8px 0; color: var(--text-primary);">${source.display_name}</h4>
+                                        <p style="margin: 0; color: var(--text-secondary); font-size: 14px;">${source.avg_confidence}% average confidence</p>
+                                    </div>
+                                    <div style="font-size: 24px; font-weight: 700; color: var(--accent-color);">${source.count}</div>
+                                </div>
+                            `).join('') : '<p>Loading source breakdown...</p>'}
+                        </div>
                     </div>
                 `;
                 
-                // Fetch and render results
-                const services = await fetchServices(query, category, suburb);
-                renderServices(services);
-            });
-        });
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading discovery stats:', error);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <h3>Unable to load statistics</h3>
+                        <p>Please check your connection and try again</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Debounce function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Add spin animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>

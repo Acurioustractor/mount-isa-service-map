@@ -12,14 +12,33 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-hashes'"],
+      scriptSrcAttr: ["'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdn.jsdelivr.net"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net"],
+      connectSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+    },
+  },
+}));
 app.use(cors());
 app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static files from frontend directory
+app.use(express.static('frontend'));
+
 // Routes
 app.get('/', (req, res) => {
+  res.redirect('/index.html');
+});
+
+app.get('/api', (req, res) => {
   res.json({ 
     message: 'Mount Isa Service Map API',
     version: '1.0.0',
@@ -37,11 +56,12 @@ app.get('/health', (req, res) => {
 });
 
 // API Routes
-app.use('/api/services', require('./routes/services'));
+app.use('/api/services', require('./routes/enhanced-services'));
 app.use('/api/categories', require('./routes/categories'));
 app.use('/api/search', require('./routes/search'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/engagement', require('./routes/engagement'));
+app.use('/api/scraping', require('./routes/scraping'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

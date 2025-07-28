@@ -3,293 +3,732 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interview Recorder - Mount Isa Service Map</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Record Interview - Mount Isa Service Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
-        .recording-controls {
+        :root {
+            --primary-color: #2563eb;
+            --sidebar-bg: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --hover-bg: #f1f5f9;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --code-bg: #f1f5f9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
             position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
         }
-        .waveform-container {
-            height: 100px;
-            background-color: #f8f9fa;
-            border-radius: 0.375rem;
-            margin-bottom: 1rem;
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border-color);
         }
-        .participant-tag {
-            background-color: #e9ecef;
-            border-radius: 20px;
-            padding: 0.25rem 0.75rem;
-            margin-right: 0.5rem;
-            display: inline-block;
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
         }
-        .recording-indicator {
-            width: 12px;
-            height: 12px;
-            background-color: #dc3545;
+
+        .sidebar-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .sidebar-nav {
+            padding: 20px 0;
+        }
+
+        .nav-section {
+            margin-bottom: 32px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0 20px 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 20px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 400;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--accent-color);
+        }
+
+        .nav-item.active {
+            background: var(--hover-bg);
+            color: var(--accent-color);
+            border-left-color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        .nav-item i {
+            width: 20px;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+
+        .content-header {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .content-body {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-indicator.ready { color: var(--text-secondary); }
+        .status-indicator.recording { color: var(--danger-color); }
+        .status-indicator.paused { color: var(--warning-color); }
+        .status-indicator.stopped { color: var(--success-color); }
+
+        .recording-pulse {
+            width: 8px;
+            height: 8px;
+            background: var(--danger-color);
             border-radius: 50%;
-            display: inline-block;
-            margin-right: 0.5rem;
+            margin-right: 8px;
             animation: pulse 1.5s infinite;
         }
+
         @keyframes pulse {
             0% { opacity: 1; }
             50% { opacity: 0.5; }
             100% { opacity: 1; }
         }
-        .metadata-card {
-            background-color: #f8f9fa;
-            border-left: 4px solid #0d6efd;
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        /* Recording Section */
+        .recording-section {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        .waveform-container {
+            height: 120px;
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .waveform-placeholder {
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .waveform-placeholder i {
+            font-size: 32px;
+            margin-bottom: 12px;
+            color: var(--accent-color);
+        }
+
+        .recording-controls {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .recording-timer {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Participants Section */
+        .participants-section {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .input-group .form-input {
+            flex: 1;
+        }
+
+        .input-group .form-select {
+            width: 140px;
+        }
+
+        /* Participant Tags */
+        .participants-list {
+            margin-top: 16px;
+        }
+
+        .participant-tag {
+            display: inline-flex;
+            align-items: center;
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 6px 12px;
+            margin: 4px 8px 4px 0;
+            font-size: 13px;
+        }
+
+        .participant-role {
+            background: var(--accent-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            margin-left: 8px;
+            font-weight: 500;
+        }
+
+        .remove-participant {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            margin-left: 8px;
+            cursor: pointer;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        .remove-participant:hover {
+            color: var(--danger-color);
+        }
+
+        /* Metadata Section */
+        .metadata-section {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .checkbox-input {
+            margin-top: 2px;
+        }
+
+        .checkbox-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Action Buttons */
+        .actions-section {
+            display: flex;
+            gap: 16px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Alert */
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .alert-info {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+        }
+
+        .alert i {
+            margin-right: 12px;
+            font-size: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content-body {
+                padding: 20px;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .recording-controls {
+                flex-wrap: wrap;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="bg-primary text-white py-4">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1 class="display-5 fw-bold mb-2">Interview Recorder</h1>
-                    <p class="lead mb-0">Mount Isa Service Map - Community Engagement Tool</p>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="sidebar-title">Community Engagement</h1>
+                <p class="sidebar-subtitle">Mount Isa Service Guide</p>
+            </div>
+            
+            <div class="sidebar-nav">
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Overview</h3>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="bi bi-speedometer2"></i>
+                        Dashboard
+                    </a>
+                    <a href="#insights" class="nav-item">
+                        <i class="bi bi-lightbulb"></i>
+                        Insights
+                    </a>
                 </div>
-                <div class="col-md-4 text-md-end">
-                    <button class="btn btn-light btn-lg">
-                        <i class="bi bi-person-circle me-2"></i>Admin
-                    </button>
+
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Data Collection</h3>
+                    <a href="#recorder" class="nav-item active">
+                        <i class="bi bi-mic"></i>
+                        Record Interview
+                    </a>
+                    <a href="#interviews" class="nav-item">
+                        <i class="bi bi-chat-square-text"></i>
+                        All Interviews
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Analysis</h3>
+                    <a href="#gaps" class="nav-item">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Service Gaps
+                    </a>
+                    <a href="#actions" class="nav-item">
+                        <i class="bi bi-list-check"></i>
+                        Action Items
+                    </a>
+                    <a href="#themes" class="nav-item">
+                        <i class="bi bi-tags"></i>
+                        Common Themes
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Quick Links</h3>
+                    <a href="../index.html" class="nav-item">
+                        <i class="bi bi-arrow-left-circle"></i>
+                        Back to Services
+                    </a>
                 </div>
             </div>
-        </div>
-    </header>
+        </nav>
 
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="dashboard.html">
-                <i class="bi bi-people me-2"></i>Community Engagement
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#engagementNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="engagementNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="dashboard.html">
-                            <i class="bi bi-speedometer2 me-1"></i>Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="recorder.html">
-                            <i class="bi bi-mic me-1"></i>Record Interview
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="gaps.html">
-                            <i class="bi bi-exclamation-triangle me-1"></i>Service Gaps
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="actions.html">
-                            <i class="bi bi-list-check me-1"></i>Action Items
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html">
-                            <i class="bi bi-arrow-left-circle me-1"></i>Back to Services
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <div class="header-content">
+                    <h1 class="header-title">Record Community Interview</h1>
+                </div>
+            </header>
 
-    <!-- Main Content -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <!-- Recording Interface -->
-                    <div class="card mb-4">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0">Recording Session</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="waveform-container" id="waveform">
-                                <div class="d-flex align-items-center justify-content-center h-100">
-                                    <div class="text-center">
-                                        <i class="bi bi-mic-fill text-primary" style="font-size: 2rem;"></i>
-                                        <p class="mt-2 mb-0">Press record to begin capturing audio</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="d-flex justify-content-center mb-3">
-                                <button id="recordButton" class="btn btn-danger btn-lg me-3">
-                                    <i class="bi bi-record-circle me-2"></i>Record
-                                </button>
-                                <button id="pauseButton" class="btn btn-warning btn-lg me-3" disabled>
-                                    <i class="bi bi-pause-circle me-2"></i>Pause
-                                </button>
-                                <button id="stopButton" class="btn btn-secondary btn-lg" disabled>
-                                    <i class="bi bi-stop-circle me-2"></i>Stop
-                                </button>
-                            </div>
-                            
-                            <div class="text-center mb-3">
-                                <span id="recordingStatus" class="badge bg-secondary">Ready to record</span>
-                                <span id="recordingTime" class="ms-3">00:00:00</span>
-                            </div>
-                            
-                            <div class="alert alert-info" role="alert">
-                                <i class="bi bi-info-circle me-2"></i>
-                                Your recording is automatically saved locally and will be securely uploaded when you submit.
-                            </div>
-                        </div>
-                    </div>
+            <div class="content-body">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1 class="page-title">New Interview Session</h1>
+                    <p class="page-subtitle">Capture community feedback and experiences with local services</p>
                     
-                    <!-- Participants -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Participants</h5>
+                    <div class="status-indicator ready" id="recordingStatus">
+                        <i class="bi bi-circle"></i>
+                        Ready to record
+                    </div>
+                </div>
+
+                <!-- Content Grid -->
+                <div class="content-grid">
+                    <!-- Main Recording Area -->
+                    <div class="recording-section">
+                        <h2 class="section-title">Audio Recording</h2>
+                        
+                        <div class="waveform-container" id="waveform">
+                            <div class="waveform-placeholder">
+                                <i class="bi bi-mic-fill"></i>
+                                <p>Press record to begin capturing audio</p>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="mb-3">
+
+                        <div class="recording-timer" id="recordingTime">00:00:00</div>
+
+                        <div class="recording-controls">
+                            <button id="recordButton" class="btn btn-danger">
+                                <i class="bi bi-record-circle"></i>
+                                Start Recording
+                            </button>
+                            <button id="pauseButton" class="btn btn-warning" disabled>
+                                <i class="bi bi-pause-circle"></i>
+                                Pause
+                            </button>
+                            <button id="stopButton" class="btn btn-outline" disabled>
+                                <i class="bi bi-stop-circle"></i>
+                                Stop
+                            </button>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            Your recording is automatically saved locally and will be securely uploaded when you submit.
+                        </div>
+
+                        <!-- Participants -->
+                        <div class="participants-section">
+                            <h3 class="section-title">Interview Participants</h3>
+                            
+                            <div class="form-group">
                                 <label class="form-label">Add Participant</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="participantName" placeholder="Participant name">
-                                    <select class="form-select" id="participantType" style="max-width: 200px;">
+                                    <input type="text" class="form-input" id="participantName" placeholder="Participant name or identifier">
+                                    <select class="form-select" id="participantType">
                                         <option value="community">Community Member</option>
                                         <option value="service_user">Service User</option>
                                         <option value="service_provider">Service Provider</option>
                                         <option value="advocate">Community Advocate</option>
                                         <option value="other">Other</option>
                                     </select>
-                                    <button class="btn btn-outline-primary" type="button" id="addParticipant">
+                                    <button class="btn btn-primary" type="button" id="addParticipant">
                                         <i class="bi bi-plus-lg"></i>
                                     </button>
                                 </div>
                             </div>
                             
-                            <div id="participantsList">
+                            <div class="participants-list" id="participantsList">
+                                <!-- Participants will be added here -->
                                 <div class="participant-tag">
-                                    John Smith <span class="badge bg-secondary ms-1">Community Member</span>
-                                    <button type="button" class="btn-close btn-close-white ms-2" aria-label="Remove"></button>
-                                </div>
-                                <div class="participant-tag">
-                                    Mary Johnson <span class="badge bg-secondary ms-1">Service User</span>
-                                    <button type="button" class="btn-close btn-close-white ms-2" aria-label="Remove"></button>
+                                    Community Member 1
+                                    <span class="participant-role">Community</span>
+                                    <button type="button" class="remove-participant" aria-label="Remove">
+                                        <i class="bi bi-x"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="col-lg-4">
-                    <!-- Session Metadata -->
-                    <div class="card metadata-card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Session Details</h5>
+
+                    <!-- Metadata Sidebar -->
+                    <div class="metadata-section">
+                        <h3 class="section-title">Session Details</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Location</label>
+                            <select class="form-select" id="location">
+                                <option value="">Select location</option>
+                                <option value="mount_isa">Mount Isa</option>
+                                <option value="mornington_island">Mornington Island</option>
+                                <option value="normanton">Normanton</option>
+                                <option value="doomadgee">Doomadgee</option>
+                                <option value="other">Other</option>
+                            </select>
                         </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label">Location</label>
-                                <select class="form-select" id="location">
-                                    <option value="">Select location</option>
-                                    <option value="mount_isa">Mount Isa</option>
-                                    <option value="mornington_island">Mornington Island</option>
-                                    <option value="normanton">Normanton</option>
-                                    <option value="doomadgee">Doomadgee</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Date & Time</label>
-                                <input type="datetime-local" class="form-control" id="sessionDateTime">
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Language</label>
-                                <select class="form-select" id="language">
-                                    <option value="en">English</option>
-                                    <option value="indigenous">Indigenous Language</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Consent</label>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="consentGiven" checked>
-                                    <label class="form-check-label" for="consentGiven">
-                                        Consent has been obtained for recording and use of this interview
-                                    </label>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Notes</label>
-                                <textarea class="form-control" id="sessionNotes" rows="3" placeholder="Any additional notes about this session..."></textarea>
-                            </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Date & Time</label>
+                            <input type="datetime-local" class="form-input" id="sessionDateTime">
                         </div>
-                    </div>
-                    
-                    <!-- Quick Actions -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">Actions</h5>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Language</label>
+                            <select class="form-select" id="language">
+                                <option value="en">English</option>
+                                <option value="indigenous">Indigenous Language</option>
+                                <option value="other">Other</option>
+                            </select>
                         </div>
-                        <div class="card-body">
-                            <button class="btn btn-success w-100 mb-2" id="saveSession">
-                                <i class="bi bi-cloud-arrow-up me-2"></i>Save & Upload
+                        
+                        <div class="checkbox-group">
+                            <input class="checkbox-input" type="checkbox" id="consentGiven" checked>
+                            <label class="checkbox-label" for="consentGiven">
+                                Consent has been obtained for recording and use of this interview
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Session Notes</label>
+                            <textarea class="form-textarea" id="sessionNotes" placeholder="Any additional notes about this session..."></textarea>
+                        </div>
+
+                        <div class="actions-section">
+                            <button class="btn btn-primary" id="saveSession">
+                                <i class="bi bi-cloud-arrow-up"></i>
+                                Save & Upload
                             </button>
-                            <button class="btn btn-outline-secondary w-100" id="discardSession">
-                                <i class="bi bi-trash me-2"></i>Discard Session
+                            <button class="btn btn-outline" id="discardSession">
+                                <i class="bi bi-trash"></i>
+                                Discard
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </main>
+    </div>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>Mount Isa Service Map</h5>
-                    <p class="text-muted">Connecting people with essential services in Mount Isa and Lower Gulf communities.</p>
-                </div>
-                <div class="col-md-3">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="../index.html" class="text-white text-decoration-none">Service Directory</a></li>
-                        <li><a href="dashboard.html" class="text-white text-decoration-none">Engagement Dashboard</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">About</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h5>Contact</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="bi bi-envelope me-2"></i> info@mountisaservices.com</li>
-                        <li><i class="bi bi-telephone me-2"></i> (07) 1234 5678</li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="my-4">
-            <div class="text-center text-muted">
-                <p>&copy; 2025 Mount Isa Service Map. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="utils.js"></script>
     <script>
         // Recording state
@@ -332,13 +771,11 @@
                 mediaRecorder.onstop = () => {
                     const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                     console.log('Recording stopped, blob size:', audioBlob.size);
-                    // In a real implementation, you would upload this blob to your server
                 };
             })
             .catch(err => {
                 console.error('Error accessing microphone:', err);
-                recordingStatus.textContent = 'Microphone access denied';
-                recordingStatus.className = 'badge bg-danger';
+                updateStatus('Microphone access denied', 'ready');
                 recordButton.disabled = true;
             });
         
@@ -358,23 +795,20 @@
             pauseButton.disabled = false;
             stopButton.disabled = false;
             
-            recordingStatus.textContent = 'Recording...';
-            recordingStatus.className = 'badge bg-danger';
+            updateStatus('Recording...', 'recording');
         }
         
         function pauseRecording() {
             if (mediaRecorder.state === 'recording') {
                 mediaRecorder.pause();
                 pauseTimer();
-                recordingStatus.textContent = 'Paused';
-                recordingStatus.className = 'badge bg-warning';
-                pauseButton.innerHTML = '<i class="bi bi-play-circle me-2"></i>Resume';
+                updateStatus('Paused', 'paused');
+                pauseButton.innerHTML = '<i class="bi bi-play-circle"></i> Resume';
             } else {
                 mediaRecorder.resume();
                 startTimer();
-                recordingStatus.textContent = 'Recording...';
-                recordingStatus.className = 'badge bg-danger';
-                pauseButton.innerHTML = '<i class="bi bi-pause-circle me-2"></i>Pause';
+                updateStatus('Recording...', 'recording');
+                pauseButton.innerHTML = '<i class="bi bi-pause-circle"></i> Pause';
             }
         }
         
@@ -387,10 +821,23 @@
             recordButton.disabled = false;
             pauseButton.disabled = true;
             stopButton.disabled = true;
-            pauseButton.innerHTML = '<i class="bi bi-pause-circle me-2"></i>Pause';
+            pauseButton.innerHTML = '<i class="bi bi-pause-circle"></i> Pause';
             
-            recordingStatus.textContent = 'Recording saved locally';
-            recordingStatus.className = 'badge bg-success';
+            updateStatus('Recording saved locally', 'stopped');
+        }
+
+        function updateStatus(text, status) {
+            recordingStatus.className = `status-indicator ${status}`;
+            
+            let icon = '';
+            switch(status) {
+                case 'ready': icon = '<i class="bi bi-circle"></i>'; break;
+                case 'recording': icon = '<div class="recording-pulse"></div>'; break;
+                case 'paused': icon = '<i class="bi bi-pause-circle"></i>'; break;
+                case 'stopped': icon = '<i class="bi bi-check-circle"></i>'; break;
+            }
+            
+            recordingStatus.innerHTML = icon + text;
         }
         
         function startTimer() {
@@ -421,12 +868,15 @@
                 const participantTag = document.createElement('div');
                 participantTag.className = 'participant-tag';
                 participantTag.innerHTML = `
-                    ${name} <span class="badge bg-secondary ms-1">${typeText}</span>
-                    <button type="button" class="btn-close btn-close-white ms-2" aria-label="Remove"></button>
+                    ${name}
+                    <span class="participant-role">${typeText}</span>
+                    <button type="button" class="remove-participant" aria-label="Remove">
+                        <i class="bi bi-x"></i>
+                    </button>
                 `;
                 
                 // Add remove functionality
-                const removeButton = participantTag.querySelector('.btn-close');
+                const removeButton = participantTag.querySelector('.remove-participant');
                 removeButton.addEventListener('click', () => {
                     participantTag.remove();
                 });
@@ -441,10 +891,6 @@
         
         function saveSession() {
             alert('In a real implementation, this would save the session and upload the recording to the server.');
-            // Here you would:
-            // 1. Upload the audio blob to your server
-            // 2. Send metadata (participants, location, etc.)
-            // 3. Redirect to the interview details page
         }
         
         function discardSession() {
@@ -457,8 +903,7 @@
                 // Reset recording interface
                 stopRecording();
                 recordingTime.textContent = '00:00:00';
-                recordingStatus.textContent = 'Ready to record';
-                recordingStatus.className = 'badge bg-secondary';
+                updateStatus('Ready to record', 'ready');
                 
                 alert('Session discarded.');
             }

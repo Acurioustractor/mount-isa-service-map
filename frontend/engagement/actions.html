@@ -3,462 +3,1065 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Action Items - Mount Isa Service Map</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Action Items - Mount Isa Service Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        :root {
+            --primary-color: #2563eb;
+            --sidebar-bg: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --hover-bg: #f1f5f9;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --code-bg: #f1f5f9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .sidebar-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .sidebar-nav {
+            padding: 20px 0;
+        }
+
+        .nav-section {
+            margin-bottom: 32px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0 20px 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 20px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 400;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--accent-color);
+        }
+
+        .nav-item.active {
+            background: var(--hover-bg);
+            color: var(--accent-color);
+            border-left-color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        .nav-item i {
+            width: 20px;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+
+        .content-header {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .content-body {
+            padding: 40px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 32px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            min-width: 140px;
+        }
+
+        /* Action Cards */
+        .actions-grid {
+            display: grid;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
         .action-card {
-            border-left: 4px solid #0d6efd;
-            transition: transform 0.2s;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.2s ease;
         }
+
         .action-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
-        .status-proposed { background-color: #6c757d; color: white; }
-        .status-in-progress { background-color: #ffc107; color: black; }
-        .status-completed { background-color: #28a745; color: white; }
-        .status-delayed { background-color: #dc3545; color: white; }
-        .filter-sidebar {
-            background-color: #f8f9fa;
-            border-radius: 0.375rem;
-            padding: 1rem;
+
+        .action-card.status-pending { border-left: 4px solid var(--warning-color); }
+        .action-card.status-in_progress { border-left: 4px solid var(--accent-color); }
+        .action-card.status-completed { border-left: 4px solid var(--success-color); }
+        .action-card.status-cancelled { border-left: 4px solid var(--danger-color); }
+
+        .action-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
         }
-        .timeline-item {
-            position: relative;
-            padding-left: 30px;
+
+        .action-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-pending { background: #fef3c7; color: var(--warning-color); }
+        .status-in_progress { background: #dbeafe; color: var(--accent-color); }
+        .status-completed { background: #dcfce7; color: var(--success-color); }
+        .status-cancelled { background: #fee2e2; color: var(--danger-color); }
+
+        .action-description {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .action-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
             margin-bottom: 20px;
         }
-        .timeline-item:before {
-            content: '';
-            position: absolute;
-            left: 10px;
-            top: 5px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: #0d6efd;
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: var(--text-secondary);
         }
-        .timeline-item:after {
-            content: '';
-            position: absolute;
-            left: 15px;
-            top: 20px;
-            width: 2px;
-            height: calc(100% + 5px);
-            background-color: #dee2e6;
+
+        .meta-item i {
+            margin-right: 8px;
+            color: var(--accent-color);
+            width: 16px;
         }
-        .timeline-item:last-child:after {
+
+        .priority-badge {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .priority-high { background: #fee2e2; color: var(--danger-color); }
+        .priority-medium { background: #fef3c7; color: var(--warning-color); }
+        .priority-low { background: #dcfce7; color: var(--success-color); }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 16px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-color);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .action-actions {
+            display: flex;
+            gap: 12px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            color: white;
+        }
+
+        .btn i {
+            margin-right: 6px;
+        }
+
+        /* Stats Summary */
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Add Action Modal */
+        .modal {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content-body {
+                padding: 20px;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .stats-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+                align-items: stretch;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="bg-primary text-white py-4">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1 class="display-5 fw-bold mb-2">Action Items</h1>
-                    <p class="lead mb-0">Mount Isa Service Map - Tracking Responses to Community Needs</p>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="sidebar-title">Community Engagement</h1>
+                <p class="sidebar-subtitle">Mount Isa Service Guide</p>
+            </div>
+            
+            <div class="sidebar-nav">
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Overview</h3>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="bi bi-speedometer2"></i>
+                        Dashboard
+                    </a>
+                    <a href="insights.html" class="nav-item">
+                        <i class="bi bi-lightbulb"></i>
+                        Insights
+                    </a>
                 </div>
-                <div class="col-md-4 text-md-end">
-                    <button class="btn btn-light btn-lg">
-                        <i class="bi bi-person-circle me-2"></i>Admin
-                    </button>
+
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Data Collection</h3>
+                    <a href="recorder.html" class="nav-item">
+                        <i class="bi bi-mic"></i>
+                        Record Interview
+                    </a>
+                    <a href="interviews.html" class="nav-item">
+                        <i class="bi bi-chat-square-text"></i>
+                        All Interviews
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Analysis</h3>
+                    <a href="gaps.html" class="nav-item">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Service Gaps
+                    </a>
+                    <a href="actions.html" class="nav-item active">
+                        <i class="bi bi-list-check"></i>
+                        Action Items
+                    </a>
+                    <a href="themes.html" class="nav-item">
+                        <i class="bi bi-tags"></i>
+                        Common Themes
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Quick Links</h3>
+                    <a href="../index.html" class="nav-item">
+                        <i class="bi bi-arrow-left-circle"></i>
+                        Back to Services
+                    </a>
                 </div>
             </div>
-        </div>
-    </header>
+        </nav>
 
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="dashboard.html">
-                <i class="bi bi-people me-2"></i>Community Engagement
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#engagementNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="engagementNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="dashboard.html">
-                            <i class="bi bi-speedometer2 me-1"></i>Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="recorder.html">
-                            <i class="bi bi-mic me-1"></i>Record Interview
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="gaps.html">
-                            <i class="bi bi-exclamation-triangle me-1"></i>Service Gaps
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="actions.html">
-                            <i class="bi bi-list-check me-1"></i>Action Items
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html">
-                            <i class="bi bi-arrow-left-circle me-1"></i>Back to Services
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Stats Overview -->
-    <section class="py-4 bg-light">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3 mb-3">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">15</h5>
-                            <p class="card-text">Total Actions</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">6</h5>
-                            <p class="card-text">In Progress</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">4</h5>
-                            <p class="card-text">Proposed</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">5</h5>
-                            <p class="card-text">Completed</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Main Content -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row">
-                <!-- Filter Sidebar -->
-                <div class="col-lg-3 mb-4">
-                    <div class="filter-sidebar">
-                        <h5 class="mb-3">Filter Actions</h5>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Status</label>
-                            <select class="form-select">
-                                <option value="">All Statuses</option>
-                                <option value="proposed">Proposed</option>
-                                <option value="in-progress" selected>In Progress</option>
-                                <option value="completed">Completed</option>
-                                <option value="delayed">Delayed</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Responsible Organization</label>
-                            <select class="form-select">
-                                <option value="">All Organizations</option>
-                                <option value="health_dept">Health Department</option>
-                                <option value="social_services">Social Services</option>
-                                <option value="education">Education Department</option>
-                                <option value="transport">Transport Authority</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Due Date</label>
-                            <select class="form-select">
-                                <option value="">Any Time</option>
-                                <option value="this_week">This Week</option>
-                                <option value="this_month">This Month</option>
-                                <option value="overdue">Overdue</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Related Gap</label>
-                            <select class="form-select">
-                                <option value="">All Gaps</option>
-                                <option value="youth_mental_health">Youth Mental Health</option>
-                                <option value="disability_transport">Accessible Transport</option>
-                                <option value="elder_care">Elder Care</option>
-                            </select>
-                        </div>
-                        
-                        <button class="btn btn-primary w-100">
-                            <i class="bi bi-funnel me-2"></i>Apply Filters
-                        </button>
-                        
-                        <button class="btn btn-success w-100 mt-2">
-                            <i class="bi bi-plus-circle me-2"></i>New Action
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <div class="header-content">
+                    <h1 class="header-title">Action Items Tracking</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="addActionBtn">
+                            <i class="bi bi-plus-lg"></i>
+                            New Action
                         </button>
                     </div>
-                    
-                    <!-- Status Distribution Chart -->
-                    <div class="card mt-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Status Distribution</h5>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="statusChart" height="200"></canvas>
-                        </div>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <h1 class="page-title">Community Action Items</h1>
+                <p class="page-subtitle">Track follow-up actions and initiatives arising from community engagement activities</p>
+
+                <!-- Stats Summary -->
+                <div class="stats-summary">
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalActions">0</span>
+                        <span class="stat-label">Total Actions</span>
                     </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="completedActions">0</span>
+                        <span class="stat-label">Completed</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="inProgressActions">0</span>
+                        <span class="stat-label">In Progress</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="pendingActions">0</span>
+                        <span class="stat-label">Pending</span>
+                    </div>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label class="filter-label">Status:</label>
+                        <select class="filter-select" id="statusFilter">
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Priority:</label>
+                        <select class="filter-select" id="priorityFilter">
+                            <option value="">All Priorities</option>
+                            <option value="high">High Priority</option>
+                            <option value="medium">Medium Priority</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Assigned To:</label>
+                        <select class="filter-select" id="assigneeFilter">
+                            <option value="">All Assignees</option>
+                            <option value="council">Mount Isa Council</option>
+                            <option value="community">Community Groups</option>
+                            <option value="services">Service Providers</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Actions Grid -->
+                <div class="actions-grid" id="actionsContainer">
+                    <!-- Action items will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Action Modal -->
+    <div class="modal" id="addActionModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Create New Action Item</h2>
+            <form id="addActionForm">
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-input" id="actionTitle" required>
                 </div>
                 
-                <!-- Main Content Area -->
-                <div class="col-lg-9">
-                    <!-- Actions List -->
-                    <div class="row" id="actionsContainer">
-                        <!-- Action cards will be dynamically loaded here -->
-                        <div class="col-md-12 mb-4">
-                            <div class="card action-card h-100">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between">
-                                        <h5 class="card-title">Expand Telehealth Services</h5>
-                                        <span class="badge status-in-progress">In Progress</span>
-                                    </div>
-                                    <p class="card-text">Implement telehealth options for mental health services to reduce wait times for young people in Mount Isa.</p>
-                                    
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p class="mb-1"><i class="bi bi-building me-2"></i> <strong>Responsible:</strong> Health Department</p>
-                                            <p class="mb-1"><i class="bi bi-calendar me-2"></i> <strong>Due:</strong> August 15, 2025</p>
-                                            <p class="mb-1"><i class="bi bi-link me-2"></i> <strong>Related Gap:</strong> Youth Mental Health Services</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p class="mb-1"><i class="bi bi-person me-2"></i> <strong>Contact:</strong> Dr. Sarah Williams</p>
-                                            <p class="mb-1"><i class="bi bi-currency-dollar me-2"></i> <strong>Budget:</strong> $25,000</p>
-                                            <p class="mb-1"><i class="bi bi-graph-up me-2"></i> <strong>Progress:</strong> 65%</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="progress mb-3">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 65%"></div>
-                                    </div>
-                                    
-                                    <div class="d-flex justify-content-between">
-                                        <div>
-                                            <span class="badge bg-info">High Impact</span>
-                                            <span class="badge bg-warning">Funding Secured</span>
-                                        </div>
-                                        <div>
-                                            <a href="#" class="btn btn-sm btn-outline-primary me-2">View Details</a>
-                                            <a href="#" class="btn btn-sm btn-outline-secondary">Update Progress</a>
-                                        </div>
-                                    </div>
-                                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" id="actionDescription" rows="4"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Priority</label>
+                    <select class="form-select" id="actionPriority" required>
+                        <option value="">Select priority</option>
+                        <option value="high">High Priority</option>
+                        <option value="medium">Medium Priority</option>
+                        <option value="low">Low Priority</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Assigned To</label>
+                    <select class="form-select" id="actionAssignee">
+                        <option value="">Select assignee</option>
+                        <option value="council">Mount Isa Council</option>
+                        <option value="community">Community Groups</option>
+                        <option value="services">Service Providers</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Due Date</label>
+                    <input type="date" class="form-input" id="actionDueDate">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Related Service Gap</label>
+                    <select class="form-select" id="relatedGap">
+                        <option value="">Select related gap (optional)</option>
+                        <!-- Will be populated dynamically -->
+                    </select>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" id="cancelActionBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Action</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let allActions = [];
+        let filteredActions = [];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadActions();
+            await loadServiceGaps();
+            setupFilters();
+            setupModal();
+            displayActions();
+        });
+
+        // Load actions from API (mock data for now)
+        async function loadActions() {
+            try {
+                // Mock data - would normally fetch from /api/engagement/actions
+                allActions = [
+                    {
+                        id: '1',
+                        title: 'Establish after-hours mental health crisis service',
+                        description: 'Work with existing mental health providers to extend operating hours and provide crisis support outside business hours.',
+                        priority: 'high',
+                        status: 'in_progress',
+                        assignee: 'council',
+                        assigneeName: 'Mount Isa Council',
+                        createdDate: '2025-07-15',
+                        dueDate: '2025-09-30',
+                        progress: 65,
+                        relatedGapId: 'gap1'
+                    },
+                    {
+                        id: '2',
+                        title: 'Create community transport coordination service',
+                        description: 'Coordinate existing transport services and identify gaps in coverage for community members without vehicles.',
+                        priority: 'medium',
+                        status: 'pending',
+                        assignee: 'community',
+                        assigneeName: 'Community Groups',
+                        createdDate: '2025-07-20',
+                        dueDate: '2025-08-15',
+                        progress: 0,
+                        relatedGapId: 'gap2'
+                    },
+                    {
+                        id: '3',
+                        title: 'Expand youth recreational programs',
+                        description: 'Partner with schools and community organizations to provide more recreational activities for young people.',
+                        priority: 'medium',
+                        status: 'completed',
+                        assignee: 'services',
+                        assigneeName: 'Service Providers',
+                        createdDate: '2025-06-01',
+                        dueDate: '2025-07-01',
+                        progress: 100,
+                        completedDate: '2025-06-28'
+                    },
+                    {
+                        id: '4',
+                        title: 'Mobile disability transport service',
+                        description: 'Develop a mobile transport service for people with disabilities across the Mount Isa region to access medical appointments.',
+                        priority: 'high',
+                        status: 'pending',
+                        assignee: 'council',
+                        assigneeName: 'Mount Isa Council',
+                        createdDate: '2025-07-10',
+                        dueDate: '2025-10-01',
+                        progress: 0,
+                        relatedGapId: 'gap3'
+                    }
+                ];
+                updateStats();
+            } catch (error) {
+                console.error('Error loading actions:', error);
+                showErrorState();
+            }
+        }
+
+        // Load service gaps for dropdown
+        async function loadServiceGaps() {
+            try {
+                // Mock data - would normally fetch from /api/engagement/gaps
+                const gaps = [
+                    { id: 'gap1', service_type: 'Mental Health Crisis Support' },
+                    { id: 'gap2', service_type: 'Community Transport' },
+                    { id: 'gap3', service_type: 'Disability Support Services' }
+                ];
+
+                const select = document.getElementById('relatedGap');
+                gaps.forEach(gap => {
+                    const option = document.createElement('option');
+                    option.value = gap.id;
+                    option.textContent = gap.service_type;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading service gaps:', error);
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            const totalActions = allActions.length;
+            const completedActions = allActions.filter(action => action.status === 'completed').length;
+            const inProgressActions = allActions.filter(action => action.status === 'in_progress').length;
+            const pendingActions = allActions.filter(action => action.status === 'pending').length;
+
+            document.getElementById('totalActions').textContent = totalActions;
+            document.getElementById('completedActions').textContent = completedActions;
+            document.getElementById('inProgressActions').textContent = inProgressActions;
+            document.getElementById('pendingActions').textContent = pendingActions;
+        }
+
+        // Setup filter event listeners
+        function setupFilters() {
+            ['statusFilter', 'priorityFilter', 'assigneeFilter'].forEach(filterId => {
+                document.getElementById(filterId).addEventListener('change', applyFilters);
+            });
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const status = document.getElementById('statusFilter').value;
+            const priority = document.getElementById('priorityFilter').value;
+            const assignee = document.getElementById('assigneeFilter').value;
+
+            filteredActions = allActions.filter(action => {
+                if (status && action.status !== status) return false;
+                if (priority && action.priority !== priority) return false;
+                if (assignee && action.assignee !== assignee) return false;
+                return true;
+            });
+
+            displayActions();
+        }
+
+        // Display actions
+        function displayActions() {
+            const actionsToShow = filteredActions.length > 0 ? filteredActions : allActions;
+            
+            if (actionsToShow.length === 0) {
+                showEmptyState();
+                return;
+            }
+
+            renderActions(actionsToShow);
+        }
+
+        // Render actions
+        function renderActions(actions) {
+            const container = document.getElementById('actionsContainer');
+            
+            const html = actions.map(action => {
+                const statusClass = `status-${action.status}`;
+                const priorityClass = `priority-${action.priority}`;
+                const statusLabel = action.status.replace('_', ' ').charAt(0).toUpperCase() + action.status.replace('_', ' ').slice(1);
+                const priorityLabel = action.priority.charAt(0).toUpperCase() + action.priority.slice(1);
+                
+                const dueDate = action.dueDate ? new Date(action.dueDate).toLocaleDateString('en-AU') : 'No due date';
+                const isOverdue = action.dueDate && new Date(action.dueDate) < new Date() && action.status !== 'completed';
+                
+                return `
+                    <div class="action-card ${statusClass}">
+                        <div class="action-header">
+                            <h3 class="action-title">${action.title}</h3>
+                            <span class="status-badge ${statusClass}">${statusLabel}</span>
+                        </div>
+                        
+                        <p class="action-description">${action.description}</p>
+                        
+                        <div class="action-meta">
+                            <div class="meta-item">
+                                <i class="bi bi-person"></i>
+                                ${action.assigneeName}
+                            </div>
+                            <div class="meta-item">
+                                <i class="bi bi-flag"></i>
+                                <span class="priority-badge ${priorityClass}">${priorityLabel}</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="bi bi-calendar"></i>
+                                Due: ${dueDate} ${isOverdue ? '<span style="color: var(--danger-color);">(Overdue)</span>' : ''}
+                            </div>
+                            <div class="meta-item">
+                                <i class="bi bi-clock"></i>
+                                Created: ${new Date(action.createdDate).toLocaleDateString('en-AU')}
                             </div>
                         </div>
                         
-                        <div class="col-md-12 mb-4">
-                            <div class="card action-card h-100">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between">
-                                        <h5 class="card-title">Mobile Disability Transport Service</h5>
-                                        <span class="badge status-proposed">Proposed</span>
-                                    </div>
-                                    <p class="card-text">Develop a mobile transport service for people with disabilities across the Mount Isa region to access medical appointments.</p>
-                                    
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p class="mb-1"><i class="bi bi-building me-2"></i> <strong>Responsible:</strong> Social Services</p>
-                                            <p class="mb-1"><i class="bi bi-calendar me-2"></i> <strong>Due:</strong> September 30, 2025</p>
-                                            <p class="mb-1"><i class="bi bi-link me-2"></i> <strong>Related Gap:</strong> Accessible Transport</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p class="mb-1"><i class="bi bi-person me-2"></i> <strong>Contact:</strong> Michael Chen</p>
-                                            <p class="mb-1"><i class="bi bi-currency-dollar me-2"></i> <strong>Budget:</strong> $75,000</p>
-                                            <p class="mb-1"><i class="bi bi-graph-up me-2"></i> <strong>Progress:</strong> 0%</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="progress mb-3">
-                                        <div class="progress-bar bg-secondary" role="progressbar" style="width: 0%"></div>
-                                    </div>
-                                    
-                                    <div class="d-flex justify-content-between">
-                                        <div>
-                                            <span class="badge bg-info">High Impact</span>
-                                            <span class="badge bg-danger">Funding Pending</span>
-                                        </div>
-                                        <div>
-                                            <a href="#" class="btn btn-sm btn-outline-primary me-2">View Details</a>
-                                            <a href="#" class="btn btn-sm btn-outline-secondary">Update Progress</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${action.progress}%"></div>
+                        </div>
+                        <div style="font-size: 14px; color: var(--text-secondary); margin-top: 8px;">
+                            Progress: ${action.progress}%
                         </div>
                         
-                        <div class="col-md-12 mb-4">
-                            <div class="card action-card h-100">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between">
-                                        <h5 class="card-title">Community Feedback Portal</h5>
-                                        <span class="badge status-completed">Completed</span>
-                                    </div>
-                                    <p class="card-text">Launch online portal for community members to share feedback and suggestions about local services.</p>
-                                    
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p class="mb-1"><i class="bi bi-building me-2"></i> <strong>Responsible:</strong> Digital Team</p>
-                                            <p class="mb-1"><i class="bi bi-calendar me-2"></i> <strong>Due:</strong> July 10, 2025</p>
-                                            <p class="mb-1"><i class="bi bi-link me-2"></i> <strong>Related Gap:</strong> Community Engagement</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p class="mb-1"><i class="bi bi-person me-2"></i> <strong>Contact:</strong> Lisa Rodriguez</p>
-                                            <p class="mb-1"><i class="bi bi-currency-dollar me-2"></i> <strong>Budget:</strong> $15,000</p>
-                                            <p class="mb-1"><i class="bi bi-graph-up me-2"></i> <strong>Progress:</strong> 100%</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="progress mb-3">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%"></div>
-                                    </div>
-                                    
-                                    <div class="d-flex justify-content-between">
-                                        <div>
-                                            <span class="badge bg-info">Medium Impact</span>
-                                            <span class="badge bg-success">Funding Secured</span>
-                                        </div>
-                                        <div>
-                                            <a href="#" class="btn btn-sm btn-outline-primary me-2">View Details</a>
-                                            <a href="#" class="btn btn-sm btn-outline-secondary">Update Progress</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-12 mb-4">
-                            <div class="card action-card h-100">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between">
-                                        <h5 class="card-title">In-Home Elder Care Program</h5>
-                                        <span class="badge status-delayed">Delayed</span>
-                                    </div>
-                                    <p class="card-text">Establish an in-home care program for elderly community members wishing to age in place in Normanton.</p>
-                                    
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p class="mb-1"><i class="bi bi-building me-2"></i> <strong>Responsible:</strong> Health Department</p>
-                                            <p class="mb-1"><i class="bi bi-calendar me-2"></i> <strong>Due:</strong> June 30, 2025</p>
-                                            <p class="mb-1"><i class="bi bi-link me-2"></i> <strong>Related Gap:</strong> Elder Care Services</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p class="mb-1"><i class="bi bi-person me-2"></i> <strong>Contact:</strong> Dr. James Wilson</p>
-                                            <p class="mb-1"><i class="bi bi-currency-dollar me-2"></i> <strong>Budget:</strong> $40,000</p>
-                                            <p class="mb-1"><i class="bi bi-graph-up me-2"></i> <strong>Progress:</strong> 30%</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="progress mb-3">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 30%"></div>
-                                    </div>
-                                    
-                                    <div class="d-flex justify-content-between">
-                                        <div>
-                                            <span class="badge bg-info">Medium Impact</span>
-                                            <span class="badge bg-warning">Funding Secured</span>
-                                        </div>
-                                        <div>
-                                            <a href="#" class="btn btn-sm btn-outline-primary me-2">View Details</a>
-                                            <a href="#" class="btn btn-sm btn-outline-secondary">Update Progress</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="action-actions">
+                            ${action.status !== 'completed' ? `
+                                <button class="btn btn-success" onclick="markCompleted('${action.id}')">
+                                    <i class="bi bi-check-circle"></i>
+                                    Mark Complete
+                                </button>
+                            ` : ''}
+                            <button class="btn btn-outline" onclick="editAction('${action.id}')">
+                                <i class="bi bi-pencil"></i>
+                                Edit
+                            </button>
+                            <button class="btn btn-primary" onclick="viewActionDetails('${action.id}')">
+                                <i class="bi bi-eye"></i>
+                                View Details
+                            </button>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                `;
+            }).join('');
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>Mount Isa Service Map</h5>
-                    <p class="text-muted">Connecting people with essential services in Mount Isa and Lower Gulf communities.</p>
-                </div>
-                <div class="col-md-3">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="../index.html" class="text-white text-decoration-none">Service Directory</a></li>
-                        <li><a href="dashboard.html" class="text-white text-decoration-none">Engagement Dashboard</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">About</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h5>Contact</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="bi bi-envelope me-2"></i> info@mountisaservices.com</li>
-                        <li><i class="bi bi-telephone me-2"></i> (07) 1234 5678</li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="my-4">
-            <div class="text-center text-muted">
-                <p>&copy; 2025 Mount Isa Service Map. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+            container.innerHTML = html;
+        }
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="utils.js"></script>
-    <script>
-        // Initialize status distribution chart
-        document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('statusChart').getContext('2d');
-            const statusChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Proposed', 'In Progress', 'Completed', 'Delayed'],
-                    datasets: [{
-                        data: [4, 6, 5, 1],
-                        backgroundColor: [
-                            '#6c757d',
-                            '#ffc107',
-                            '#28a745',
-                            '#dc3545'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
+        // Setup modal
+        function setupModal() {
+            const modal = document.getElementById('addActionModal');
+            const addBtn = document.getElementById('addActionBtn');
+            const cancelBtn = document.getElementById('cancelActionBtn');
+            const form = document.getElementById('addActionForm');
+
+            addBtn.addEventListener('click', () => {
+                modal.classList.add('show');
+            });
+
+            cancelBtn.addEventListener('click', () => {
+                modal.classList.remove('show');
+                form.reset();
+            });
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                    form.reset();
                 }
             });
-        });
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                createAction();
+            });
+        }
+
+        // Create new action
+        function createAction() {
+            const formData = {
+                title: document.getElementById('actionTitle').value,
+                description: document.getElementById('actionDescription').value,
+                priority: document.getElementById('actionPriority').value,
+                assignee: document.getElementById('actionAssignee').value,
+                dueDate: document.getElementById('actionDueDate').value,
+                relatedGapId: document.getElementById('relatedGap').value
+            };
+
+            // In a real app, this would POST to /api/engagement/actions
+            const newAction = {
+                id: Date.now().toString(),
+                ...formData,
+                status: 'pending',
+                progress: 0,
+                assigneeName: getAssigneeName(formData.assignee),
+                createdDate: new Date().toISOString().split('T')[0]
+            };
+
+            allActions.unshift(newAction);
+            updateStats();
+            displayActions();
+
+            // Close modal and reset form
+            document.getElementById('addActionModal').classList.remove('show');
+            document.getElementById('addActionForm').reset();
+
+            alert('Action item created successfully!');
+        }
+
+        // Helper functions
+        function getAssigneeName(assignee) {
+            const names = {
+                'council': 'Mount Isa Council',
+                'community': 'Community Groups',
+                'services': 'Service Providers',
+                'other': 'Other'
+            };
+            return names[assignee] || assignee;
+        }
+
+        function markCompleted(actionId) {
+            const action = allActions.find(a => a.id === actionId);
+            if (action) {
+                action.status = 'completed';
+                action.progress = 100;
+                action.completedDate = new Date().toISOString().split('T')[0];
+                updateStats();
+                displayActions();
+                alert('Action marked as completed!');
+            }
+        }
+
+        function editAction(actionId) {
+            alert(`Edit action ${actionId} - would open edit modal in full implementation`);
+        }
+
+        function viewActionDetails(actionId) {
+            const action = allActions.find(a => a.id === actionId);
+            if (action) {
+                alert(`Action Details:\n\nTitle: ${action.title}\nDescription: ${action.description}\nStatus: ${action.status}\nPriority: ${action.priority}\nAssigned to: ${action.assigneeName}\nDue date: ${action.dueDate || 'Not set'}\nProgress: ${action.progress}%`);
+            }
+        }
+
+        // Show empty state
+        function showEmptyState() {
+            document.getElementById('actionsContainer').innerHTML = `
+                <div class="empty-state">
+                    <i class="bi bi-list-check"></i>
+                    <h3>No action items found</h3>
+                    <p>No action items match your current filters, or none have been created yet.</p>
+                </div>
+            `;
+        }
+
+        // Show error state
+        function showErrorState() {
+            document.getElementById('actionsContainer').innerHTML = `
+                <div class="empty-state">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <h3>Unable to load action items</h3>
+                    <p>Please check your connection and try again.</p>
+                </div>
+            `;
+        }
     </script>
 </body>
 </html>

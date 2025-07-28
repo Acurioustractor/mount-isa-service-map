@@ -3,446 +3,704 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Service Gaps Analysis - Mount Isa Service Map</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Service Gaps - Mount Isa Service Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .gap-card {
-            border-left: 4px solid #dc3545;
-            transition: transform 0.2s;
+        :root {
+            --primary-color: #2563eb;
+            --sidebar-bg: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --hover-bg: #f1f5f9;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --code-bg: #f1f5f9;
         }
-        .gap-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .priority-high { background-color: #dc3545; color: white; }
-        .priority-medium { background-color: #ffc107; color: black; }
-        .priority-low { background-color: #28a745; color: white; }
-        .filter-sidebar {
-            background-color: #f8f9fa;
-            border-radius: 0.375rem;
-            padding: 1rem;
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: var(--text-primary);
+            line-height: 1.6;
         }
-        .map-container {
-            height: 400px;
-            background-color: #e9ecef;
-            border-radius: 0.375rem;
-            position: relative;
-            overflow: hidden;
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
         }
-        .map-marker {
-            position: absolute;
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .sidebar-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .sidebar-nav {
+            padding: 20px 0;
+        }
+
+        .nav-section {
+            margin-bottom: 32px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0 20px 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 20px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 400;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--accent-color);
+        }
+
+        .nav-item.active {
+            background: var(--hover-bg);
+            color: var(--accent-color);
+            border-left-color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        .nav-item i {
             width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background-color: #dc3545;
-            border: 2px solid white;
-            transform: translate(-50%, -50%);
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin-right: 12px;
+            font-size: 16px;
         }
-        .map-marker.high { background-color: #dc3545; }
-        .map-marker.medium { background-color: #ffc107; }
-        .map-marker.low { background-color: #28a745; }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+
+        .content-header {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .content-body {
+            padding: 40px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 32px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            min-width: 140px;
+        }
+
+        /* Gap Cards */
+        .gaps-grid {
+            display: grid;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .gap-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.2s ease;
+        }
+
+        .gap-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .gap-card.priority-high { border-left: 4px solid var(--danger-color); }
+        .gap-card.priority-medium { border-left: 4px solid var(--warning-color); }
+        .gap-card.priority-low { border-left: 4px solid var(--success-color); }
+
+        .gap-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .gap-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .priority-badge {
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .priority-high { background: #fee2e2; color: var(--danger-color); }
+        .priority-medium { background: #fef3c7; color: var(--warning-color); }
+        .priority-low { background: #dcfce7; color: var(--success-color); }
+
+        .gap-description {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .gap-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .meta-item i {
+            margin-right: 8px;
+            color: var(--accent-color);
+            width: 16px;
+        }
+
+        .gap-actions {
+            display: flex;
+            gap: 12px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .btn i {
+            margin-right: 6px;
+        }
+
+        /* Stats Summary */
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content-body {
+                padding: 20px;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .stats-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="bg-primary text-white py-4">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1 class="display-5 fw-bold mb-2">Service Gaps Analysis</h1>
-                    <p class="lead mb-0">Mount Isa Service Map - Identifying and Addressing Community Needs</p>
-                </div>
-                <div class="col-md-4 text-md-end">
-                    <button class="btn btn-light btn-lg">
-                        <i class="bi bi-person-circle me-2"></i>Admin
-                    </button>
-                </div>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="sidebar-title">Community Engagement</h1>
+                <p class="sidebar-subtitle">Mount Isa Service Guide</p>
             </div>
-        </div>
-    </header>
+            
+            <div class="sidebar-nav">
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Overview</h3>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="bi bi-speedometer2"></i>
+                        Dashboard
+                    </a>
+                    <a href="insights.html" class="nav-item">
+                        <i class="bi bi-lightbulb"></i>
+                        Insights
+                    </a>
+                </div>
 
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="dashboard.html">
-                <i class="bi bi-people me-2"></i>Community Engagement
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#engagementNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="engagementNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="dashboard.html">
-                            <i class="bi bi-speedometer2 me-1"></i>Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="recorder.html">
-                            <i class="bi bi-mic me-1"></i>Record Interview
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="gaps.html">
-                            <i class="bi bi-exclamation-triangle me-1"></i>Service Gaps
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="actions.html">
-                            <i class="bi bi-list-check me-1"></i>Action Items
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html">
-                            <i class="bi bi-arrow-left-circle me-1"></i>Back to Services
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Data Collection</h3>
+                    <a href="recorder.html" class="nav-item">
+                        <i class="bi bi-mic"></i>
+                        Record Interview
+                    </a>
+                    <a href="interviews.html" class="nav-item">
+                        <i class="bi bi-chat-square-text"></i>
+                        All Interviews
+                    </a>
+                </div>
 
-    <!-- Stats Overview -->
-    <section class="py-4 bg-light">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3 mb-3">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">12</h5>
-                            <p class="card-text">Total Gaps</p>
-                        </div>
-                    </div>
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Analysis</h3>
+                    <a href="gaps.html" class="nav-item active">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Service Gaps
+                    </a>
+                    <a href="actions.html" class="nav-item">
+                        <i class="bi bi-list-check"></i>
+                        Action Items
+                    </a>
+                    <a href="themes.html" class="nav-item">
+                        <i class="bi bi-tags"></i>
+                        Common Themes
+                    </a>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">5</h5>
-                            <p class="card-text">High Priority</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">4</h5>
-                            <p class="card-text">Medium Priority</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">3</h5>
-                            <p class="card-text">Low Priority</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Main Content -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row">
-                <!-- Filter Sidebar -->
-                <div class="col-lg-3 mb-4">
-                    <div class="filter-sidebar">
-                        <h5 class="mb-3">Filter Gaps</h5>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Location</label>
-                            <select class="form-select">
-                                <option value="">All Locations</option>
-                                <option value="mount_isa" selected>Mount Isa</option>
-                                <option value="mornington_island">Mornington Island</option>
-                                <option value="normanton">Normanton</option>
-                                <option value="doomadgee">Doomadgee</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Priority</label>
-                            <select class="form-select">
-                                <option value="">All Priorities</option>
-                                <option value="high">High Priority</option>
-                                <option value="medium">Medium Priority</option>
-                                <option value="low">Low Priority</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Service Type</label>
-                            <select class="form-select">
-                                <option value="">All Service Types</option>
-                                <option value="mental_health">Mental Health</option>
-                                <option value="disability">Disability Support</option>
-                                <option value="youth">Youth Services</option>
-                                <option value="health">Health Services</option>
-                                <option value="transport">Transport</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Status</label>
-                            <select class="form-select">
-                                <option value="">All Statuses</option>
-                                <option value="active" selected>Active</option>
-                                <option value="in_progress">In Progress</option>
-                                <option value="addressed">Addressed</option>
-                            </select>
-                        </div>
-                        
-                        <button class="btn btn-primary w-100">
-                            <i class="bi bi-funnel me-2"></i>Apply Filters
-                        </button>
-                    </div>
-                    
-                    <!-- Priority Distribution Chart -->
-                    <div class="card mt-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Priority Distribution</h5>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="priorityChart" height="200"></canvas>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Main Content Area -->
-                <div class="col-lg-9">
-                    <!-- Map Visualization -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Geographic Distribution</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="map-container">
-                                <!-- Simplified map visualization -->
-                                <div class="position-absolute" style="top: 30%; left: 40%;">
-                                    <h6 class="text-center">Mount Isa Region</h6>
-                                </div>
-                                
-                                <!-- Map markers -->
-                                <div class="map-marker high" style="top: 40%; left: 35%;" title="Youth Mental Health - High Priority"></div>
-                                <div class="map-marker high" style="top: 35%; left: 50%;" title="Disability Transport - High Priority"></div>
-                                <div class="map-marker medium" style="top: 50%; left: 30%;" title="Elder Care - Medium Priority"></div>
-                                <div class="map-marker medium" style="top: 45%; left: 60%;" title="Substance Abuse - Medium Priority"></div>
-                                <div class="map-marker low" style="top: 60%; left: 45%;" title="Recreation - Low Priority"></div>
-                                
-                                <div class="position-absolute" style="bottom: 10px; left: 10px;">
-                                    <div class="d-flex align-items-center">
-                                        <div class="me-2">
-                                            <div class="map-marker high d-inline-block me-1" style="position: static; transform: none;"></div>
-                                            <span>High Priority</span>
-                                        </div>
-                                        <div class="me-2">
-                                            <div class="map-marker medium d-inline-block me-1" style="position: static; transform: none;"></div>
-                                            <span>Medium Priority</span>
-                                        </div>
-                                        <div>
-                                            <div class="map-marker low d-inline-block me-1" style="position: static; transform: none;"></div>
-                                            <span>Low Priority</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Gaps List -->
-                    <div class="row" id="gapsContainer">
-                        <!-- Gap cards will be dynamically loaded here -->
-                        <div class="col-md-6 mb-4">
-                            <div class="card gap-card h-100">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between">
-                                        <h5 class="card-title">Youth Mental Health Services</h5>
-                                        <span class="badge priority-high">High Priority</span>
-                                    </div>
-                                    <p class="card-text">Limited specialized mental health services for young people, with wait times exceeding 3 months.</p>
-                                    <div class="d-flex justify-content-between text-muted small mb-2">
-                                        <span><i class="bi bi-geo-alt me-1"></i>Mount Isa</span>
-                                        <span><i class="bi bi-people me-1"></i>150+ affected</span>
-                                    </div>
-                                    <div class="progress mb-2">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 85%"></div>
-                                    </div>
-                                    <div class="d-flex justify-content-between small">
-                                        <span>Severity: 8.5/10</span>
-                                        <span>Last mentioned: Jul 25, 2025</span>
-                                    </div>
-                                </div>
-                                <div class="card-footer bg-transparent">
-                                    <div class="d-flex justify-content-between">
-                                        <small class="text-muted">12 supporting interviews</small>
-                                        <a href="#" class="btn btn-sm btn-outline-danger">View Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6 mb-4">
-                            <div class="card gap-card h-100">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between">
-                                        <h5 class="card-title">Accessible Transport</h5>
-                                        <span class="badge priority-high">High Priority</span>
-                                    </div>
-                                    <p class="card-text">Lack of wheelchair-accessible transport for medical appointments and daily activities.</p>
-                                    <div class="d-flex justify-content-between text-muted small mb-2">
-                                        <span><i class="bi bi-geo-alt me-1"></i>Mornington Island</span>
-                                        <span><i class="bi bi-people me-1"></i>75+ affected</span>
-                                    </div>
-                                    <div class="progress mb-2">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 78%"></div>
-                                    </div>
-                                    <div class="d-flex justify-content-between small">
-                                        <span>Severity: 7.8/10</span>
-                                        <span>Last mentioned: Jul 24, 2025</span>
-                                    </div>
-                                </div>
-                                <div class="card-footer bg-transparent">
-                                    <div class="d-flex justify-content-between">
-                                        <small class="text-muted">8 supporting interviews</small>
-                                        <a href="#" class="btn btn-sm btn-outline-danger">View Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6 mb-4">
-                            <div class="card gap-card h-100">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between">
-                                        <h5 class="card-title">Elder Care Services</h5>
-                                        <span class="badge priority-medium">Medium Priority</span>
-                                    </div>
-                                    <p class="card-text">Limited in-home care options for elderly community members wishing to age in place.</p>
-                                    <div class="d-flex justify-content-between text-muted small mb-2">
-                                        <span><i class="bi bi-geo-alt me-1"></i>Normanton</span>
-                                        <span><i class="bi bi-people me-1"></i>42 affected</span>
-                                    </div>
-                                    <div class="progress mb-2">
-                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 62%"></div>
-                                    </div>
-                                    <div class="d-flex justify-content-between small">
-                                        <span>Severity: 6.2/10</span>
-                                        <span>Last mentioned: Jul 22, 2025</span>
-                                    </div>
-                                </div>
-                                <div class="card-footer bg-transparent">
-                                    <div class="d-flex justify-content-between">
-                                        <small class="text-muted">5 supporting interviews</small>
-                                        <a href="#" class="btn btn-sm btn-outline-warning">View Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6 mb-4">
-                            <div class="card gap-card h-100">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between">
-                                        <h5 class="card-title">Substance Abuse Support</h5>
-                                        <span class="badge priority-medium">Medium Priority</span>
-                                    </div>
-                                    <p class="card-text">Insufficient specialized support services for substance abuse recovery in remote communities.</p>
-                                    <div class="d-flex justify-content-between text-muted small mb-2">
-                                        <span><i class="bi bi-geo-alt me-1"></i>Mount Isa</span>
-                                        <span><i class="bi bi-people me-1"></i>38 affected</span>
-                                    </div>
-                                    <div class="progress mb-2">
-                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 58%"></div>
-                                    </div>
-                                    <div class="d-flex justify-content-between small">
-                                        <span>Severity: 5.8/10</span>
-                                        <span>Last mentioned: Jul 20, 2025</span>
-                                    </div>
-                                </div>
-                                <div class="card-footer bg-transparent">
-                                    <div class="d-flex justify-content-between">
-                                        <small class="text-muted">7 supporting interviews</small>
-                                        <a href="#" class="btn btn-sm btn-outline-warning">View Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Quick Links</h3>
+                    <a href="../index.html" class="nav-item">
+                        <i class="bi bi-arrow-left-circle"></i>
+                        Back to Services
+                    </a>
                 </div>
             </div>
-        </div>
-    </section>
+        </nav>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>Mount Isa Service Map</h5>
-                    <p class="text-muted">Connecting people with essential services in Mount Isa and Lower Gulf communities.</p>
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <div class="header-content">
+                    <h1 class="header-title">Service Gaps Analysis</h1>
                 </div>
-                <div class="col-md-3">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="../index.html" class="text-white text-decoration-none">Service Directory</a></li>
-                        <li><a href="dashboard.html" class="text-white text-decoration-none">Engagement Dashboard</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">About</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h5>Contact</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="bi bi-envelope me-2"></i> info@mountisaservices.com</li>
-                        <li><i class="bi bi-telephone me-2"></i> (07) 1234 5678</li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="my-4">
-            <div class="text-center text-muted">
-                <p>&copy; 2025 Mount Isa Service Map. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+            </header>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="utils.js"></script>
+            <div class="content-body">
+                <h1 class="page-title">Identified Service Gaps</h1>
+                <p class="page-subtitle">Critical needs in Mount Isa and Lower Gulf communities identified through community engagement</p>
+
+                <!-- Stats Summary -->
+                <div class="stats-summary">
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalGaps">0</span>
+                        <span class="stat-label">Total Gaps</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="highPriority">0</span>
+                        <span class="stat-label">High Priority</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="peopleAffected">0</span>
+                        <span class="stat-label">People Affected</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="activeActions">0</span>
+                        <span class="stat-label">Active Actions</span>
+                    </div>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label class="filter-label">Priority:</label>
+                        <select class="filter-select" id="priorityFilter">
+                            <option value="">All Priorities</option>
+                            <option value="high">High Priority</option>
+                            <option value="medium">Medium Priority</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Location:</label>
+                        <select class="filter-select" id="locationFilter">
+                            <option value="">All Locations</option>
+                            <option value="Mount Isa">Mount Isa</option>
+                            <option value="Mornington Island">Mornington Island</option>
+                            <option value="Normanton">Normanton</option>
+                            <option value="Doomadgee">Doomadgee</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Status:</label>
+                        <select class="filter-select" id="statusFilter">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="addressed">Addressed</option>
+                            <option value="in_progress">In Progress</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Gaps Grid -->
+                <div class="gaps-grid" id="gapsContainer">
+                    <!-- Service gaps will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
     <script>
-        // Initialize priority distribution chart
-        document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('priorityChart').getContext('2d');
-            const priorityChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['High Priority', 'Medium Priority', 'Low Priority'],
-                    datasets: [{
-                        data: [5, 4, 3],
-                        backgroundColor: [
-                            '#dc3545',
-                            '#ffc107',
-                            '#28a745'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }
-            });
+        // Global state
+        let allGaps = [];
+        let filteredGaps = [];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadGaps();
+            setupFilters();
+            displayGaps();
         });
+
+        // Load gaps from API
+        async function loadGaps() {
+            try {
+                const response = await fetch('/api/engagement/gaps');
+                allGaps = await response.json();
+                updateStats();
+            } catch (error) {
+                console.error('Error loading gaps:', error);
+                showErrorState();
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            const totalGaps = allGaps.length;
+            const highPriority = allGaps.filter(gap => gap.severity_score >= 8).length;
+            const peopleAffected = allGaps.reduce((sum, gap) => sum + (gap.people_affected_estimate || 0), 0);
+
+            document.getElementById('totalGaps').textContent = totalGaps;
+            document.getElementById('highPriority').textContent = highPriority;
+            document.getElementById('peopleAffected').textContent = peopleAffected.toLocaleString();
+            document.getElementById('activeActions').textContent = '0'; // Would come from actions API
+        }
+
+        // Setup filter event listeners
+        function setupFilters() {
+            ['priorityFilter', 'locationFilter', 'statusFilter'].forEach(filterId => {
+                document.getElementById(filterId).addEventListener('change', applyFilters);
+            });
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const priority = document.getElementById('priorityFilter').value;
+            const location = document.getElementById('locationFilter').value;
+            const status = document.getElementById('statusFilter').value;
+
+            filteredGaps = allGaps.filter(gap => {
+                // Priority filter
+                if (priority) {
+                    const gapPriority = getPriorityLevel(gap.severity_score);
+                    if (gapPriority !== priority) return false;
+                }
+
+                // Location filter
+                if (location && gap.location_name !== location) return false;
+
+                // Status filter
+                if (status && gap.status !== status) return false;
+
+                return true;
+            });
+
+            displayGaps();
+        }
+
+        // Display gaps
+        function displayGaps() {
+            const gapsToShow = filteredGaps.length > 0 ? filteredGaps : allGaps;
+            
+            if (gapsToShow.length === 0) {
+                showEmptyState();
+                return;
+            }
+
+            renderGaps(gapsToShow);
+        }
+
+        // Render gaps
+        function renderGaps(gaps) {
+            const container = document.getElementById('gapsContainer');
+            
+            const html = gaps.map(gap => {
+                const priorityLevel = getPriorityLevel(gap.severity_score);
+                const priorityClass = `priority-${priorityLevel}`;
+                const priorityLabel = priorityLevel.charAt(0).toUpperCase() + priorityLevel.slice(1);
+                
+                return `
+                    <div class="gap-card ${priorityClass}">
+                        <div class="gap-header">
+                            <h3 class="gap-title">${gap.service_type}</h3>
+                            <span class="priority-badge ${priorityClass}">${priorityLabel} Priority</span>
+                        </div>
+                        
+                        <p class="gap-description">${gap.description}</p>
+                        
+                        <div class="gap-meta">
+                            <div class="meta-item">
+                                <i class="bi bi-geo-alt"></i>
+                                ${gap.location_name}
+                            </div>
+                            <div class="meta-item">
+                                <i class="bi bi-people"></i>
+                                ${gap.people_affected_estimate}+ people affected
+                            </div>
+                            <div class="meta-item">
+                                <i class="bi bi-speedometer"></i>
+                                Severity: ${gap.severity_score}/10
+                            </div>
+                            <div class="meta-item">
+                                <i class="bi bi-flag"></i>
+                                Status: ${gap.status}
+                            </div>
+                        </div>
+                        
+                        <div class="gap-actions">
+                            <a href="#" class="btn btn-primary" onclick="viewGapDetails('${gap.id}')">
+                                <i class="bi bi-eye"></i>
+                                View Details
+                            </a>
+                            <a href="actions.html?gap=${gap.id}" class="btn btn-outline">
+                                <i class="bi bi-plus-circle"></i>
+                                Create Action
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = html;
+        }
+
+        // Helper functions
+        function getPriorityLevel(score) {
+            if (score >= 8) return 'high';
+            if (score >= 5) return 'medium';
+            return 'low';
+        }
+
+        function viewGapDetails(gapId) {
+            const gap = allGaps.find(g => g.id === gapId);
+            if (gap) {
+                alert(`Gap Details:\n\nService Type: ${gap.service_type}\nLocation: ${gap.location_name}\nDescription: ${gap.description}\nSeverity: ${gap.severity_score}/10\nPeople Affected: ${gap.people_affected_estimate}+`);
+            }
+        }
+
+        // Show empty state
+        function showEmptyState() {
+            document.getElementById('gapsContainer').innerHTML = `
+                <div class="empty-state">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <h3>No service gaps found</h3>
+                    <p>No service gaps match your current filters, or none have been identified yet.</p>
+                </div>
+            `;
+        }
+
+        // Show error state
+        function showErrorState() {
+            document.getElementById('gapsContainer').innerHTML = `
+                <div class="empty-state">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <h3>Unable to load service gaps</h3>
+                    <p>Please check your connection and try again.</p>
+                </div>
+            `;
+        }
     </script>
 </body>
 </html>

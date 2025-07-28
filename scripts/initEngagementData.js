@@ -2,9 +2,6 @@ const db = require('../config/db');
 
 async function initEngagementData() {
   try {
-    // Connect to database
-    await db.connect();
-    
     console.log('Initializing engagement data...');
     
     // Insert sample locations
@@ -19,7 +16,6 @@ async function initEngagementData() {
       const query = `
         INSERT INTO locations (name, type, population, remoteness_category)
         VALUES ($1, $2, $3, $4)
-        ON CONFLICT (name) DO NOTHING
       `;
       await db.query(query, [location.name, location.type, location.population, location.remoteness_category]);
     }
@@ -42,7 +38,6 @@ async function initEngagementData() {
       const query = `
         INSERT INTO theme_categories (name, description, color_code)
         VALUES ($1, $2, $3)
-        ON CONFLICT (name) DO NOTHING
       `;
       await db.query(query, [theme.name, theme.description, theme.color_code]);
     }
@@ -90,7 +85,6 @@ async function initEngagementData() {
           people_affected_estimate, status
         )
         VALUES ($1, $2, $3, $4, $5, $6)
-        ON CONFLICT DO NOTHING
       `;
       await db.query(query, [
         gap.service_type, 
@@ -151,7 +145,6 @@ async function initEngagementData() {
           target_date, status
         )
         VALUES ($1, $2, $3, $4, $5, $6)
-        ON CONFLICT DO NOTHING
       `;
       await db.query(query, [
         action.title,
