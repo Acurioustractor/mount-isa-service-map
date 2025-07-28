@@ -8,6 +8,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <!-- Leaflet MarkerCluster CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
     <style>
         :root {
             --primary-color: #2563eb;
@@ -1371,6 +1377,335 @@
                 font-size: 16px;
             }
         }
+
+        /* Interactive Map Styles */
+        .map-header {
+            margin-bottom: 32px;
+        }
+
+        .map-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .map-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .map-filter-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .map-filter-btn:hover {
+            background: #e2e8f0;
+            border-color: var(--accent-color);
+        }
+
+        .map-filter-btn.active {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+
+        .map-view-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .map-control-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .map-control-btn:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+
+        .map-container {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 24px;
+            height: 600px;
+        }
+
+        .interactive-map {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .map-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            gap: 16px;
+        }
+
+        .map-legend {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            height: fit-content;
+        }
+
+        .map-legend h4 {
+            margin: 0 0 16px 0;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .legend-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .legend-marker {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
+        }
+
+        .legend-marker.health { background: #ef4444; }
+        .legend-marker.disability { background: #8b5cf6; }
+        .legend-marker.youth { background: #10b981; }
+        .legend-marker.housing { background: #f59e0b; }
+        .legend-marker.indigenous { background: #dc2626; }
+        .legend-marker.other { background: #6b7280; }
+
+        .map-service-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            max-width: 90vw;
+            max-height: 80vh;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            background: #f8fafc;
+        }
+
+        .panel-title {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .panel-close {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .panel-close:hover {
+            background: #e2e8f0;
+            color: var(--text-primary);
+        }
+
+        .panel-content {
+            padding: 24px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        /* Custom Leaflet marker styles */
+        .service-marker {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .service-marker:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .service-marker.health { background: #ef4444; }
+        .service-marker.disability { background: #8b5cf6; }
+        .service-marker.youth { background: #10b981; }
+        .service-marker.housing { background: #f59e0b; }
+        .service-marker.indigenous { background: #dc2626; }
+        .service-marker.other { background: #6b7280; }
+
+        /* Fullscreen Map Styles */
+        .map-fullscreen {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 9999 !important;
+            background: white;
+            grid-template-columns: 1fr !important;
+        }
+
+        .map-fullscreen .map-legend {
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            z-index: 1001;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .map-fullscreen .map-controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            z-index: 1001;
+            margin-bottom: 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .map-fullscreen .interactive-map {
+            height: 100vh !important;
+            border: none !important;
+            border-radius: 0 !important;
+        }
+
+        .map-fullscreen .map-header {
+            display: none;
+        }
+
+        /* Fullscreen exit overlay */
+        .fullscreen-exit {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1002;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .map-fullscreen .fullscreen-exit {
+            opacity: 1;
+        }
+
+        /* Hide other page elements when in fullscreen */
+        .map-fullscreen-active .sidebar,
+        .map-fullscreen-active .main-content > *:not(#service-map-section) {
+            display: none !important;
+        }
+
+        .map-fullscreen-active .main-content {
+            margin-left: 0 !important;
+        }
+
+        @media (max-width: 768px) {
+            .map-container {
+                grid-template-columns: 1fr;
+                height: auto;
+                gap: 16px;
+            }
+            
+            .interactive-map {
+                height: 400px;
+            }
+            
+            .map-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .map-filters {
+                justify-content: center;
+            }
+            
+            .map-service-panel {
+                width: 95vw;
+                height: 90vh;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1401,6 +1736,10 @@
                         <i class="bi bi-grid-3x3-gap"></i>
                         All Services
                         <span class="count" id="all-count">0</span>
+                    </a>
+                    <a href="#map" class="nav-item" data-section="service-map">
+                        <i class="bi bi-geo-alt"></i>
+                        Service Map
                     </a>
                     <a href="#disability" class="nav-item" data-category="Disability Support">
                         <i class="bi bi-heart"></i>
@@ -1571,6 +1910,12 @@
                                         <a href="#" data-nav-action="services" class="nav-link">Browse Services <i class="bi bi-arrow-right"></i></a>
                                     </div>
                                     <div class="nav-card">
+                                        <i class="bi bi-geo-alt"></i>
+                                        <h3>Interactive Map</h3>
+                                        <p>Explore Mount Isa services by location with our interactive mapping system featuring filtering and clustering.</p>
+                                        <a href="#" data-nav-action="service-map" class="nav-link">View Map <i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                    <div class="nav-card">
                                         <i class="bi bi-mic"></i>
                                         <h3>Share Your Voice</h3>
                                         <p>Contribute to our understanding through confidential interviews, or explore insights from community feedback.</p>
@@ -1627,6 +1972,113 @@
                         <div class="loading-state">
                             <i class="bi bi-arrow-clockwise" style="font-size: 32px; animation: spin 1s linear infinite;"></i>
                             <p>Loading services...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Map Section -->
+                <div id="service-map-section" class="content-section" style="display: none;">
+                    <div class="map-header">
+                        <h1 class="page-title">Service Map</h1>
+                        <p class="page-subtitle">Explore Mount Isa services by location with interactive mapping</p>
+                        
+                        <!-- Map Controls -->
+                        <div class="map-controls">
+                            <div class="map-filters">
+                                <button class="map-filter-btn active" data-map-filter="all">
+                                    <i class="bi bi-geo-alt"></i>
+                                    All Services
+                                </button>
+                                <button class="map-filter-btn" data-map-filter="health">
+                                    <i class="bi bi-heart-pulse"></i>
+                                    Health
+                                </button>
+                                <button class="map-filter-btn" data-map-filter="disability">
+                                    <i class="bi bi-heart"></i>
+                                    Disability
+                                </button>
+                                <button class="map-filter-btn" data-map-filter="youth">
+                                    <i class="bi bi-people"></i>
+                                    Youth
+                                </button>
+                                <button class="map-filter-btn" data-map-filter="housing">
+                                    <i class="bi bi-house"></i>
+                                    Housing
+                                </button>
+                                <button class="map-filter-btn" data-map-filter="indigenous">
+                                    <i class="bi bi-heart-fill"></i>
+                                    Indigenous
+                                </button>
+                            </div>
+                            
+                            <div class="map-view-controls">
+                                <button class="map-control-btn" id="centerMapBtn" title="Center on Mount Isa">
+                                    <i class="bi bi-crosshair"></i>
+                                </button>
+                                <button class="map-control-btn" id="clusterToggleBtn" title="Toggle Clustering">
+                                    <i class="bi bi-collection"></i>
+                                </button>
+                                <button class="map-control-btn" id="fullscreenToggleBtn" title="Toggle Fullscreen">
+                                    <i class="bi bi-fullscreen"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Map Container -->
+                    <div class="map-container" id="mapContainer">
+                        <div class="fullscreen-exit" id="fullscreenExit">
+                            Press ESC or click the fullscreen button to exit
+                        </div>
+                        <div id="serviceMap" class="interactive-map">
+                            <div class="map-loading" id="mapLoading">
+                                <i class="bi bi-geo-alt" style="font-size: 48px; color: var(--accent-color);"></i>
+                                <p>Loading Mount Isa service map...</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Map Legend -->
+                        <div class="map-legend">
+                            <h4>Service Categories</h4>
+                            <div class="legend-items">
+                                <div class="legend-item">
+                                    <span class="legend-marker health"></span>
+                                    <span>Health Services</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-marker disability"></span>
+                                    <span>Disability Support</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-marker youth"></span>
+                                    <span>Youth Support</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-marker housing"></span>
+                                    <span>Housing</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-marker indigenous"></span>
+                                    <span>Indigenous Services</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-marker other"></span>
+                                    <span>Other Services</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Service Details Panel -->
+                    <div id="mapServicePanel" class="map-service-panel" style="display: none;">
+                        <div class="panel-header">
+                            <h3 class="panel-title">Service Details</h3>
+                            <button class="panel-close" id="closePanelBtn">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                        <div class="panel-content" id="panelContent">
+                            <!-- Service details will be populated here -->
                         </div>
                     </div>
                 </div>
@@ -1929,6 +2381,12 @@
         </main>
     </div>
 
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Leaflet MarkerCluster JavaScript -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
     <script>
         // Global state
         let allServices = [];
@@ -1937,6 +2395,14 @@
         let searchQuery = '';
         let currentSection = 'story-timeline';
         let currentStoryFilter = 'all';
+        
+        // Map state
+        let serviceMap = null;
+        let mapMarkers = [];
+        let markerClusterGroup = null;
+        let currentMapFilter = 'all';
+        let clusteringEnabled = true;
+        let isMapFullscreen = false;
 
         // Service counts by category
         const serviceCounts = {};
@@ -2304,6 +2770,8 @@ Corina James added: "Don't fly in and fly out and think you're going to solve pr
                     renderStories();
                 } else if (sectionName === 'welcome') {
                     // Welcome page is static, no need to load data
+                } else if (sectionName === 'service-map') {
+                    initializeServiceMap();
                 }
             } else if (sectionName === 'services') {
                 // Handle services section
@@ -2477,6 +2945,9 @@ Corina James added: "Don't fly in and fly out and think you're going to solve pr
                     break;
                 case 'services':
                     showSection('services');
+                    break;
+                case 'service-map':
+                    showSection('service-map');
                     break;
                 case 'community-voice':
                     showSection('community-voice');
@@ -2919,6 +3390,375 @@ Corina James added: "Don't fly in and fly out and think you're going to solve pr
             }
         `;
         document.head.appendChild(style);
+
+        // =================== INTERACTIVE MAP FUNCTIONALITY ===================
+
+        // Mount Isa coordinates
+        const MOUNT_ISA_COORDS = [-20.7256, 139.4927];
+        
+        // Sample service locations (in real app, these would come from database with geocoding)
+        const serviceLocations = {
+            'Mount Isa Hospital': { lat: -20.7256, lng: 139.4927, category: 'health' },
+            'NWHHS Mount Isa': { lat: -20.7300, lng: 139.4900, category: 'health' },
+            'Gidgee Healing': { lat: -20.7200, lng: 139.4950, category: 'indigenous' },
+            'headspace Mount Isa': { lat: -20.7280, lng: 139.4880, category: 'youth' },
+            'PCYC Mount Isa': { lat: -20.7240, lng: 139.4960, category: 'youth' },
+            'NWQICSS Youth Hub': { lat: -20.7220, lng: 139.4940, category: 'youth' },
+            'Centacare North Queensland': { lat: -20.7290, lng: 139.4910, category: 'housing' },
+            'QDN Peer Support Group': { lat: -20.7270, lng: 139.4890, category: 'disability' },
+            'Mount Isa Diversionary Centre': { lat: -20.7250, lng: 139.4930, category: 'indigenous' },
+            'Community Justice Group': { lat: -20.7210, lng: 139.4970, category: 'indigenous' }
+        };
+
+        // Initialize service map
+        function initializeServiceMap() {
+            if (serviceMap) {
+                return; // Map already initialized
+            }
+
+            // Remove loading state
+            document.getElementById('mapLoading').style.display = 'none';
+
+            // Initialize Leaflet map
+            serviceMap = L.map('serviceMap').setView(MOUNT_ISA_COORDS, 13);
+
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 18,
+            }).addTo(serviceMap);
+
+            // Initialize marker cluster group
+            markerClusterGroup = L.markerClusterGroup({
+                maxClusterRadius: 50,
+                spiderfyOnMaxZoom: true,
+                showCoverageOnHover: false,
+                zoomToBoundsOnClick: true
+            });
+
+            // Load service markers
+            loadServiceMarkers();
+
+            // Setup map event listeners
+            setupMapEventListeners();
+
+            // Add map controls functionality
+            setupMapControls();
+        }
+
+        // Load service markers on map
+        function loadServiceMarkers() {
+            // Clear existing markers
+            if (markerClusterGroup) {
+                markerClusterGroup.clearLayers();
+            }
+            mapMarkers = [];
+
+            // Create markers for each service
+            allServices.forEach(service => {
+                // Try to find location data
+                let location = serviceLocations[service.name];
+                
+                // If no specific location, use Mount Isa center with slight offset
+                if (!location) {
+                    location = {
+                        lat: MOUNT_ISA_COORDS[0] + (Math.random() - 0.5) * 0.02,
+                        lng: MOUNT_ISA_COORDS[1] + (Math.random() - 0.5) * 0.02,
+                        category: getCategoryFromService(service)
+                    };
+                }
+
+                // Create custom marker
+                const markerElement = createServiceMarker(service, location.category);
+                const marker = L.marker([location.lat, location.lng], {
+                    icon: L.divIcon({
+                        html: markerElement,
+                        className: 'custom-marker',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 16]
+                    })
+                });
+
+                // Add popup with service info
+                const popupContent = createMarkerPopup(service);
+                marker.bindPopup(popupContent, {
+                    maxWidth: 300,
+                    className: 'service-popup'
+                });
+
+                // Store service data with marker
+                marker.serviceData = service;
+                marker.serviceCategory = location.category;
+
+                mapMarkers.push(marker);
+            });
+
+            // Add markers to cluster group
+            markerClusterGroup.addLayers(mapMarkers);
+            
+            // Add cluster group to map if clustering is enabled
+            if (clusteringEnabled) {
+                serviceMap.addLayer(markerClusterGroup);
+            } else {
+                mapMarkers.forEach(marker => serviceMap.addLayer(marker));
+            }
+
+            // Filter markers based on current filter
+            filterMapMarkers(currentMapFilter);
+        }
+
+        // Create custom service marker HTML
+        function createServiceMarker(service, category) {
+            const categoryIcon = getCategoryIcon(category);
+            return `<div class="service-marker ${category}" title="${service.name}">
+                ${categoryIcon}
+            </div>`;
+        }
+
+        // Get category icon
+        function getCategoryIcon(category) {
+            const icons = {
+                'health': '<i class="bi bi-heart-pulse"></i>',
+                'disability': '<i class="bi bi-heart"></i>',
+                'youth': '<i class="bi bi-people"></i>',
+                'housing': '<i class="bi bi-house"></i>',
+                'indigenous': '<i class="bi bi-heart-fill"></i>',
+                'other': '<i class="bi bi-geo-alt"></i>'
+            };
+            return icons[category] || icons.other;
+        }
+
+        // Determine category from service data
+        function getCategoryFromService(service) {
+            const category = service.category?.toLowerCase() || '';
+            if (category.includes('health') || category.includes('medical')) return 'health';
+            if (category.includes('disability') || category.includes('ndis')) return 'disability';
+            if (category.includes('youth') || category.includes('young')) return 'youth';
+            if (category.includes('housing') || category.includes('accommodation')) return 'housing';
+            if (category.includes('indigenous') || category.includes('aboriginal')) return 'indigenous';
+            return 'other';
+        }
+
+        // Create marker popup content
+        function createMarkerPopup(service) {
+            return `
+                <div class="service-popup-content">
+                    <h4>${service.name}</h4>
+                    <p class="service-category">${service.category || 'Community Service'}</p>
+                    <p class="service-description">${service.description || 'No description available.'}</p>
+                    <div class="popup-actions">
+                        <button class="btn btn-primary btn-sm" data-service-id="${service.id}" data-action="view-details">
+                            View Details
+                        </button>
+                        ${service.phone ? `<a href="tel:${service.phone}" class="btn btn-outline btn-sm">Call</a>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Filter map markers
+        function filterMapMarkers(filter) {
+            currentMapFilter = filter;
+            
+            // Update filter button states
+            document.querySelectorAll('.map-filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mapFilter === filter);
+            });
+
+            // Clear current markers
+            if (clusteringEnabled) {
+                markerClusterGroup.clearLayers();
+            } else {
+                mapMarkers.forEach(marker => serviceMap.removeLayer(marker));
+            }
+
+            // Filter markers
+            const filteredMarkers = filter === 'all' 
+                ? mapMarkers 
+                : mapMarkers.filter(marker => marker.serviceCategory === filter);
+
+            // Add filtered markers back to map
+            if (clusteringEnabled) {
+                markerClusterGroup.addLayers(filteredMarkers);
+                if (!serviceMap.hasLayer(markerClusterGroup)) {
+                    serviceMap.addLayer(markerClusterGroup);
+                }
+            } else {
+                filteredMarkers.forEach(marker => serviceMap.addLayer(marker));
+            }
+        }
+
+        // Setup map event listeners
+        function setupMapEventListeners() {
+            // Filter button event listeners
+            document.querySelectorAll('.map-filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const filter = e.currentTarget.dataset.mapFilter;
+                    filterMapMarkers(filter);
+                });
+            });
+
+            // Popup action event listeners
+            serviceMap.on('popupopen', function(e) {
+                const popup = e.popup;
+                const popupElement = popup.getElement();
+                
+                // Add event listeners to popup buttons
+                popupElement.querySelectorAll('[data-action="view-details"]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const serviceId = e.currentTarget.dataset.serviceId;
+                        const service = allServices.find(s => s.id == serviceId);
+                        if (service) {
+                            showServiceDetailsPanel(service);
+                        }
+                    });
+                });
+            });
+        }
+
+        // Setup map controls
+        function setupMapControls() {
+            // Center map button
+            document.getElementById('centerMapBtn').addEventListener('click', () => {
+                serviceMap.setView(MOUNT_ISA_COORDS, 13);
+            });
+
+            // Toggle clustering button
+            document.getElementById('clusterToggleBtn').addEventListener('click', () => {
+                clusteringEnabled = !clusteringEnabled;
+                const btn = document.getElementById('clusterToggleBtn');
+                
+                if (clusteringEnabled) {
+                    btn.innerHTML = '<i class="bi bi-collection"></i>';
+                    btn.title = 'Disable Clustering';
+                    // Remove individual markers and add cluster group
+                    mapMarkers.forEach(marker => serviceMap.removeLayer(marker));
+                    markerClusterGroup.addLayers(mapMarkers);
+                    serviceMap.addLayer(markerClusterGroup);
+                } else {
+                    btn.innerHTML = '<i class="bi bi-geo-alt-fill"></i>';
+                    btn.title = 'Enable Clustering';
+                    // Remove cluster group and add individual markers
+                    serviceMap.removeLayer(markerClusterGroup);
+                    mapMarkers.forEach(marker => serviceMap.addLayer(marker));
+                }
+                
+                // Re-apply current filter
+                filterMapMarkers(currentMapFilter);
+            });
+
+            // Close panel button
+            document.getElementById('closePanelBtn').addEventListener('click', () => {
+                document.getElementById('mapServicePanel').style.display = 'none';
+            });
+
+            // Fullscreen toggle button
+            document.getElementById('fullscreenToggleBtn').addEventListener('click', () => {
+                toggleMapFullscreen();
+            });
+
+            // ESC key to exit fullscreen
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && isMapFullscreen) {
+                    toggleMapFullscreen();
+                }
+            });
+        }
+
+        // Show service details panel
+        function showServiceDetailsPanel(service) {
+            const panel = document.getElementById('mapServicePanel');
+            const content = document.getElementById('panelContent');
+            
+            content.innerHTML = `
+                <div class="service-detail-content">
+                    <h3>${service.name}</h3>
+                    <p class="service-category-badge">${service.category || 'Community Service'}</p>
+                    
+                    <div class="service-detail-section">
+                        <h4>Description</h4>
+                        <p>${service.description || 'No description available.'}</p>
+                    </div>
+                    
+                    ${service.phone ? `
+                    <div class="service-detail-section">
+                        <h4>Contact</h4>
+                        <p><a href="tel:${service.phone}"><i class="bi bi-telephone"></i> ${service.phone}</a></p>
+                    </div>
+                    ` : ''}
+                    
+                    ${service.address ? `
+                    <div class="service-detail-section">
+                        <h4>Address</h4>
+                        <p><i class="bi bi-geo-alt"></i> ${service.address}</p>
+                    </div>
+                    ` : ''}
+                    
+                    ${service.website ? `
+                    <div class="service-detail-section">
+                        <h4>Website</h4>
+                        <p><a href="${service.website}" target="_blank"><i class="bi bi-globe"></i> Visit Website</a></p>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="service-detail-actions">
+                        <button class="btn btn-primary" data-service-action="back-to-list">
+                            <i class="bi bi-list"></i>
+                            View in Service List
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Add event listener for back to list button
+            content.querySelector('[data-service-action="back-to-list"]')?.addEventListener('click', () => {
+                panel.style.display = 'none';
+                showSection('services');
+                // Optionally highlight the service in the list
+            });
+            
+            panel.style.display = 'block';
+        }
+
+        // Toggle map fullscreen mode
+        function toggleMapFullscreen() {
+            const mapContainer = document.getElementById('mapContainer');
+            const body = document.body;
+            const fullscreenBtn = document.getElementById('fullscreenToggleBtn');
+
+            if (!isMapFullscreen) {
+                // Enter fullscreen
+                mapContainer.classList.add('map-fullscreen');
+                body.classList.add('map-fullscreen-active');
+                fullscreenBtn.innerHTML = '<i class="bi bi-fullscreen-exit"></i>';
+                fullscreenBtn.title = 'Exit Fullscreen';
+                isMapFullscreen = true;
+                
+                // Trigger map resize after DOM changes
+                setTimeout(() => {
+                    if (serviceMap) {
+                        serviceMap.invalidateSize();
+                    }
+                }, 100);
+                
+            } else {
+                // Exit fullscreen
+                mapContainer.classList.remove('map-fullscreen');
+                body.classList.remove('map-fullscreen-active');
+                fullscreenBtn.innerHTML = '<i class="bi bi-fullscreen"></i>';
+                fullscreenBtn.title = 'Toggle Fullscreen';
+                isMapFullscreen = false;
+                
+                // Trigger map resize after DOM changes
+                setTimeout(() => {
+                    if (serviceMap) {
+                        serviceMap.invalidateSize();
+                    }
+                }, 100);
+            }
+        }
+
+        // =================== END MAP FUNCTIONALITY ===================
     </script>
 </body>
 </html>
