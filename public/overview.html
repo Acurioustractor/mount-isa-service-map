@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Overview - Mount Isa Community Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --bg-light: #f8fafc;
+            --accent-color: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section {
+            padding: 80px 0;
+        }
+
+        .section:nth-child(even) {
+            background: var(--bg-light);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--text-primary);
+        }
+
+        .why-section {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quote-block {
+            background: var(--primary-color);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .quote-block::before {
+            content: '"';
+            font-size: 4rem;
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            opacity: 0.3;
+        }
+
+        .quote-text {
+            font-size: 1.3rem;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .quote-author {
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .capability-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--primary-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .capability-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .capability-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .capability-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .capability-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .capability-features {
+            list-style: none;
+        }
+
+        .capability-features li {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .capability-features li::before {
+            content: '✓';
+            color: #10b981;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .stats-section {
+            background: var(--primary-color);
+            color: white;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-item {
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .impact-section {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .impact-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .impact-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .capabilities-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1>Mount Isa Community Platform</h1>
+            <p>A community-led approach to understanding and improving services on Kalkadoon Country</p>
+        </div>
+    </header>
+
+    <!-- Why We Built This -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Why We Built This Platform</h2>
+            <div class="why-section">
+                <div class="quote-block">
+                    <div class="quote-text">
+                        "Don't fly in and fly out and think you're going to solve problems. We need services that our people can trust and programs that are here when we need them."
+                    </div>
+                    <div class="quote-author">— Roslyn Von Senden, Traditional Owner & Community Leader</div>
+                </div>
+                
+                <p style="font-size: 1.2rem; margin-bottom: 2rem;">
+                    For too long, remote communities like Mount Isa have been studied <em>by outsiders</em> rather than <strong>telling our own story</strong>. This platform represents a fundamental shift—putting community voices at the center of understanding our service needs and celebrating our strengths.
+                </p>
+                
+                <p style="font-size: 1.1rem; color: var(--text-secondary);">
+                    Built on <strong>Kalkadoon Country</strong>, this technology platform combines traditional Indigenous knowledge systems with cutting-edge AI to create the most comprehensive understanding of community services ever developed for our region. Every feature reflects our values: <em>community-led</em>, <em>culturally-centered</em>, and <em>built to last</em>.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Platform Capabilities -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Platform Capabilities</h2>
+            
+            <div class="capabilities-grid">
+                <div class="capability-card">
+                    <div class="capability-icon"><i class="bi bi-mic-fill"></i></div>
+                    <h3 class="capability-title">Community Voice Analysis</h3>
+                    <p class="capability-description">AI-powered analysis of community interviews to understand real needs and experiences</p>
+                    <ul class="capability-features">
+                        <li>127+ resident interviews analyzed</li>
+                        <li>Automated theme extraction and sentiment analysis</li>
+                        <li>Community validation and feedback loops</li>
+                        <li>Service gap identification from lived experience</li>
+                        <li>Cultural context preservation</li>
+                    </ul>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon"><i class="bi bi-search"></i></div>
+                    <h3 class="capability-title">Intelligent Service Discovery</h3>
+                    <p class="capability-description">Automated discovery and cataloging of community services with quality assurance</p>
+                    <ul class="capability-features">
+                        <li>880% growth from 5 to 44+ services</li>
+                        <li>Multi-source web scraping and validation</li>
+                        <li>Real-time service information updates</li>
+                        <li>Confidence scoring for data quality</li>
+                        <li>Integration with government and NGO databases</li>
+                    </ul>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                    <h3 class="capability-title">Interactive Service Mapping</h3>
+                    <p class="capability-description">Geographic visualization of services with accessibility and cultural considerations</p>
+                    <ul class="capability-features">
+                        <li>Full-screen interactive maps</li>
+                        <li>Service clustering and filtering</li>
+                        <li>Accessibility information display</li>
+                        <li>Cultural service identification</li>
+                        <li>Mobile-responsive design</li>
+                    </ul>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon"><i class="bi bi-clock-history"></i></div>
+                    <h3 class="capability-title">Community Story Timeline</h3>
+                    <p class="capability-description">Documenting key moments in community transformation and service development</p>
+                    <ul class="capability-features">
+                        <li>Historical service development tracking</li>
+                        <li>Community milestone documentation</li>
+                        <li>Visual storytelling interface</li>
+                        <li>Cultural event integration</li>
+                        <li>Progress celebration and learning</li>
+                    </ul>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon"><i class="bi bi-bar-chart-fill"></i></div>
+                    <h3 class="capability-title">Engagement Dashboard</h3>
+                    <p class="capability-description">Real-time insights into community engagement and service utilization patterns</p>
+                    <ul class="capability-features">
+                        <li>Service usage analytics</li>
+                        <li>Community feedback tracking</li>
+                        <li>Gap analysis and prioritization</li>
+                        <li>Engagement trend monitoring</li>
+                        <li>Impact measurement tools</li>
+                    </ul>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon"><i class="bi bi-shield-check"></i></div>
+                    <h3 class="capability-title">Cultural Safety & Ethics</h3>
+                    <p class="capability-description">Indigenous data sovereignty and community-controlled research principles</p>
+                    <ul class="capability-features">
+                        <li>Community consent and validation processes</li>
+                        <li>Indigenous data governance frameworks</li>
+                        <li>Cultural protocol integration</li>
+                        <li>Privacy and anonymity protection</li>
+                        <li>Community ownership of insights</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Stats -->
+    <section class="section stats-section">
+        <div class="container">
+            <h2 class="section-title" style="color: white;">Platform Impact</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">127+</div>
+                    <div class="stat-label">Community Interviews</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">44+</div>
+                    <div class="stat-label">Services Discovered</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">880%</div>
+                    <div class="stat-label">Service Growth</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">19,000+</div>
+                    <div class="stat-label">Residents Served</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Community-Led</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">60,000+</div>
+                    <div class="stat-label">Years on Country</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Impact -->
+    <section class="section">
+        <div class="container">
+            <div class="impact-section">
+                <h2 class="section-title">Real Community Impact</h2>
+                <p style="font-size: 1.2rem; margin-bottom: 2rem;">
+                    This isn't just technology—it's community transformation. Our platform has created tangible changes in how services are discovered, accessed, and improved in Mount Isa.
+                </p>
+                
+                <div class="impact-grid">
+                    <div class="impact-item">
+                        <div class="impact-number">5→44</div>
+                        <h4>Services Mapped</h4>
+                        <p>From a handful of known services to comprehensive community resource mapping</p>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-number">0→8</div>
+                        <h4>Indigenous Services</h4>
+                        <p>Dedicated Indigenous health and cultural services identified and promoted</p>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-number">24/7</div>
+                        <h4>Service Access</h4>
+                        <p>Around-the-clock access to service information for community members</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="section cta-section">
+        <div class="container">
+            <h2 class="section-title">Experience the Platform</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem; color: var(--text-secondary);">
+                Ready to explore how community-led technology can transform service delivery? 
+                Dive into the platform and see the power of community voices in action.
+            </p>
+            
+            <div class="cta-buttons">
+                <a href="/" class="btn btn-primary">
+                    <i class="bi bi-house-heart"></i>
+                    Explore the Platform
+                </a>
+                <a href="/engagement/dashboard.html" class="btn btn-secondary">
+                    <i class="bi bi-bar-chart"></i>
+                    View Community Dashboard
+                </a>
+                <a href="https://github.com/Acurioustractor/mount-isa-service-map" class="btn btn-secondary">
+                    <i class="bi bi-github"></i>
+                    View on GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

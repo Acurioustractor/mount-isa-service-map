@@ -1,31 +1,3 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "frontend/**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/frontend/(.*)",
-      "dest": "/frontend/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/server.js"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "functions": {
-    "server.js": {
-      "maxDuration": 30
-    }
-  }
+  "version": 2
 }

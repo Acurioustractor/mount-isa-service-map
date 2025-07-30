@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Details - Mount Isa Service Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --sidebar-bg: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --hover-bg: #f1f5f9;
+            --accent-color: #3b82f6;
+            --code-bg: #f1f5f9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar - same as before */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .sidebar-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .back-link:hover {
+            color: var(--accent-color);
+            background: var(--hover-bg);
+        }
+
+        .back-link i {
+            margin-right: 8px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+
+        .content-body {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        /* Documentation-style content */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            margin-bottom: 32px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb i {
+            margin: 0 8px;
+            font-size: 12px;
+        }
+
+        .service-category-badge {
+            background: var(--code-bg);
+            color: var(--accent-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+
+        .service-title {
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .service-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 40px;
+            padding: 24px;
+            background: var(--code-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .btn i {
+            margin-right: 6px;
+        }
+
+        /* Content sections */
+        .content-section {
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .section-content {
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .info-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .info-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-card-title i {
+            margin-right: 8px;
+            color: var(--accent-color);
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-list li {
+            padding: 6px 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+        }
+
+        .info-list li i {
+            margin-right: 8px;
+            color: var(--accent-color);
+            width: 16px;
+        }
+
+        .info-list a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .info-list a:hover {
+            text-decoration: underline;
+        }
+
+        /* Code-like sections */
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 24px 0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+
+        .highlight-box {
+            background: #eff6ff;
+            border-left: 4px solid var(--accent-color);
+            padding: 16px 20px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .highlight-box .title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content-body {
+                padding: 20px;
+            }
+
+            .service-title {
+                font-size: 28px;
+            }
+
+            .quick-actions {
+                flex-direction: column;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="sidebar-title">Mount Isa Services</h1>
+                <p class="sidebar-subtitle">Community Service Guide</p>
+            </div>
+            
+            <a href="index-new.html" class="back-link">
+                <i class="bi bi-arrow-left"></i>
+                Back to Services
+            </a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-body">
+                <!-- Breadcrumb -->
+                <nav class="breadcrumb">
+                    <a href="index-new.html">Services</a>
+                    <i class="bi bi-chevron-right"></i>
+                    <span id="serviceCategoryBreadcrumb">Mental Health</span>
+                    <i class="bi bi-chevron-right"></i>
+                    <span id="serviceNameBreadcrumb">headspace Mount Isa</span>
+                </nav>
+
+                <!-- Service Header -->
+                <div class="service-category-badge" id="serviceCategoryBadge">Mental Health</div>
+                <h1 class="service-title" id="serviceTitle">headspace Mount Isa</h1>
+                <p class="service-subtitle" id="serviceDescription">Local youth mental health centre offering free counselling, drug and alcohol support, and physical and sexual health services for ages 12-25.</p>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <a href="#" class="btn btn-primary" id="websiteBtn">
+                        <i class="bi bi-box-arrow-up-right"></i>
+                        Visit Website
+                    </a>
+                    <a href="#" class="btn btn-outline" id="phoneBtn">
+                        <i class="bi bi-telephone"></i>
+                        Call Now
+                    </a>
+                    <a href="#" class="btn btn-outline" id="emailBtn">
+                        <i class="bi bi-envelope"></i>
+                        Send Email
+                    </a>
+                </div>
+
+                <!-- Service Information -->
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3 class="info-card-title">
+                            <i class="bi bi-geo-alt"></i>
+                            Location & Contact
+                        </h3>
+                        <ul class="info-list" id="contactInfo">
+                            <li><i class="bi bi-geo-alt"></i> <span id="address">13 Simpson Street, Mount Isa</span></li>
+                            <li><i class="bi bi-telephone"></i> <span id="phone">(07) 4743 3700</span></li>
+                            <li><i class="bi bi-envelope"></i> <a href="#" id="email">info@headspacemountisa.com.au</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h3 class="info-card-title">
+                            <i class="bi bi-clock"></i>
+                            Service Hours
+                        </h3>
+                        <ul class="info-list">
+                            <li><i class="bi bi-calendar"></i> Monday - Friday: 9:00 AM - 5:00 PM</li>
+                            <li><i class="bi bi-calendar"></i> Saturday: 10:00 AM - 2:00 PM</li>
+                            <li><i class="bi bi-calendar"></i> Sunday: Closed</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h3 class="info-card-title">
+                            <i class="bi bi-people"></i>
+                            Eligibility
+                        </h3>
+                        <ul class="info-list">
+                            <li><i class="bi bi-check-circle"></i> Ages 12-25 years</li>
+                            <li><i class="bi bi-check-circle"></i> Medicare card holders</li>
+                            <li><i class="bi bi-check-circle"></i> Free services</li>
+                            <li><i class="bi bi-check-circle"></i> No referral required</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h3 class="info-card-title">
+                            <i class="bi bi-heart"></i>
+                            Services Offered
+                        </h3>
+                        <ul class="info-list">
+                            <li><i class="bi bi-check-circle"></i> Mental health counselling</li>
+                            <li><i class="bi bi-check-circle"></i> Drug and alcohol support</li>
+                            <li><i class="bi bi-check-circle"></i> Physical health services</li>
+                            <li><i class="bi bi-check-circle"></i> Sexual health support</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Detailed Information -->
+                <section class="content-section">
+                    <h2 class="section-title">About This Service</h2>
+                    <div class="section-content">
+                        <p>headspace Mount Isa is part of Australia's National Youth Mental Health Foundation, providing free mental health services to young people aged 12-25 years in the Mount Isa and surrounding communities.</p>
+                        
+                        <p>Our multidisciplinary team includes psychologists, social workers, mental health nurses, and peer workers who work together to provide holistic care tailored to each young person's needs.</p>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2 class="section-title">How to Access</h2>
+                    <div class="section-content">
+                        <div class="highlight-box">
+                            <div class="title">🚀 Quick Start</div>
+                            <p>No referral required - you can walk in, call, or book online. Same-day appointments available for urgent concerns.</p>
+                        </div>
+                        
+                        <ol style="padding-left: 20px; color: var(--text-secondary);">
+                            <li style="margin-bottom: 8px;"><strong>Contact us:</strong> Call (07) 4743 3700 or visit our website</li>
+                            <li style="margin-bottom: 8px;"><strong>Initial assessment:</strong> Brief phone or in-person discussion about your needs</li>
+                            <li style="margin-bottom: 8px;"><strong>Appointment booking:</strong> Schedule your first session with appropriate clinician</li>
+                            <li style="margin-bottom: 8px;"><strong>Ongoing support:</strong> Regular sessions and access to group programs</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2 class="section-title">Important Information</h2>
+                    <div class="section-content">
+                        <div class="code-block">
+                            <strong>Crisis Support:</strong><br>
+                            If you're in immediate danger, call 000<br>
+                            For mental health crisis support:<br>
+                            • Lifeline: 13 11 14<br>
+                            • Kids Helpline: 1800 55 1800<br>
+                            • Beyond Blue: 1300 22 4636
+                        </div>
+                        
+                        <p><strong>Privacy:</strong> All services are confidential. Information is only shared with your consent, except in circumstances where there are serious safety concerns.</p>
+                        
+                        <p><strong>Cost:</strong> Services are free for eligible young people with a Medicare card.</p>
+                    </div>
+                </section>
+
+                <!-- Last Updated -->
+                <div style="margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border-color); font-size: 14px; color: var(--text-secondary);">
+                    <p>Last updated: <span id="lastUpdated">July 27, 2025</span></p>
+                    <p>Service information verified by community feedback and official sources.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // This would normally load service data from the API based on URL parameters
+        // For demo purposes, we'll use the sample data
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get service ID from URL params
+            const serviceId = new URLSearchParams(window.location.search).get('id');
+            if (serviceId) {
+                loadServiceData(serviceId);
+            }
+            
+            // Setup click handlers for action buttons
+            setupActionButtons();
+        });
+
+        function setupActionButtons(service = null) {
+            const websiteBtn = document.getElementById('websiteBtn');
+            const phoneBtn = document.getElementById('phoneBtn');
+            const emailBtn = document.getElementById('emailBtn');
+
+            if (service) {
+                // Update button hrefs and show/hide based on available data
+                if (service.website) {
+                    websiteBtn.href = service.website;
+                    websiteBtn.style.display = 'inline-flex';
+                } else {
+                    websiteBtn.style.display = 'none';
+                }
+
+                if (service.phone) {
+                    phoneBtn.href = `tel:${service.phone}`;
+                    phoneBtn.style.display = 'inline-flex';
+                } else {
+                    phoneBtn.style.display = 'none';
+                }
+
+                if (service.email) {
+                    emailBtn.href = `mailto:${service.email}`;
+                    emailBtn.style.display = 'inline-flex';
+                } else {
+                    emailBtn.style.display = 'none';
+                }
+            }
+        }
+
+        // Function to load and display service data
+        async function loadServiceData(serviceId) {
+            try {
+                const response = await fetch(`/api/services/${serviceId}`);
+                const service = await response.json();
+                
+                // Update page content with service data
+                document.getElementById('serviceTitle').textContent = service.name;
+                document.getElementById('serviceDescription').textContent = service.description;
+                document.getElementById('serviceCategoryBadge').textContent = service.category;
+                document.getElementById('serviceCategoryBreadcrumb').textContent = service.category;
+                document.getElementById('serviceNameBreadcrumb').textContent = service.name;
+                
+                // Update contact information
+                if (service.address && service.suburb) {
+                    document.getElementById('address').textContent = `${service.address}, ${service.suburb}`;
+                }
+                if (service.phone) {
+                    document.getElementById('phone').textContent = service.phone;
+                }
+                if (service.email) {
+                    const emailLink = document.getElementById('email');
+                    emailLink.textContent = service.email;
+                    emailLink.href = `mailto:${service.email}`;
+                }
+                
+                // Update last updated date
+                if (service.last_updated) {
+                    const lastUpdated = new Date(service.last_updated).toLocaleDateString('en-AU', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    });
+                    document.getElementById('lastUpdated').textContent = lastUpdated;
+                }
+                
+                // Update action buttons
+                setupActionButtons(service);
+                
+            } catch (error) {
+                console.error('Error loading service data:', error);
+            }
+        }
+    </script>
+</body>
+</html>

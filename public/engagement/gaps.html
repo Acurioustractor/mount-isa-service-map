@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Gaps - Mount Isa Service Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --sidebar-bg: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --hover-bg: #f1f5f9;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --code-bg: #f1f5f9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .sidebar-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .sidebar-nav {
+            padding: 20px 0;
+        }
+
+        .nav-section {
+            margin-bottom: 32px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0 20px 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 20px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 400;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--accent-color);
+        }
+
+        .nav-item.active {
+            background: var(--hover-bg);
+            color: var(--accent-color);
+            border-left-color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        .nav-item i {
+            width: 20px;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+
+        .content-header {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .content-body {
+            padding: 40px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 32px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            min-width: 140px;
+        }
+
+        /* Gap Cards */
+        .gaps-grid {
+            display: grid;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .gap-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.2s ease;
+        }
+
+        .gap-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .gap-card.priority-high { border-left: 4px solid var(--danger-color); }
+        .gap-card.priority-medium { border-left: 4px solid var(--warning-color); }
+        .gap-card.priority-low { border-left: 4px solid var(--success-color); }
+
+        .gap-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .gap-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .priority-badge {
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .priority-high { background: #fee2e2; color: var(--danger-color); }
+        .priority-medium { background: #fef3c7; color: var(--warning-color); }
+        .priority-low { background: #dcfce7; color: var(--success-color); }
+
+        .gap-description {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .gap-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .meta-item i {
+            margin-right: 8px;
+            color: var(--accent-color);
+            width: 16px;
+        }
+
+        .gap-actions {
+            display: flex;
+            gap: 12px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .btn i {
+            margin-right: 6px;
+        }
+
+        /* Stats Summary */
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content-body {
+                padding: 20px;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .stats-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="sidebar-title">Community Engagement</h1>
+                <p class="sidebar-subtitle">Mount Isa Service Guide</p>
+            </div>
+            
+            <div class="sidebar-nav">
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Overview</h3>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="bi bi-speedometer2"></i>
+                        Dashboard
+                    </a>
+                    <a href="insights.html" class="nav-item">
+                        <i class="bi bi-lightbulb"></i>
+                        Insights
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Data Collection</h3>
+                    <a href="recorder.html" class="nav-item">
+                        <i class="bi bi-mic"></i>
+                        Record Interview
+                    </a>
+                    <a href="interviews.html" class="nav-item">
+                        <i class="bi bi-chat-square-text"></i>
+                        All Interviews
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Analysis</h3>
+                    <a href="gaps.html" class="nav-item active">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Service Gaps
+                    </a>
+                    <a href="actions.html" class="nav-item">
+                        <i class="bi bi-list-check"></i>
+                        Action Items
+                    </a>
+                    <a href="themes.html" class="nav-item">
+                        <i class="bi bi-tags"></i>
+                        Common Themes
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Quick Links</h3>
+                    <a href="../index.html" class="nav-item">
+                        <i class="bi bi-arrow-left-circle"></i>
+                        Back to Services
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <div class="header-content">
+                    <h1 class="header-title">Service Gaps Analysis</h1>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <h1 class="page-title">Identified Service Gaps</h1>
+                <p class="page-subtitle">Critical needs in Mount Isa and Lower Gulf communities identified through community engagement</p>
+
+                <!-- Stats Summary -->
+                <div class="stats-summary">
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalGaps">0</span>
+                        <span class="stat-label">Total Gaps</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="highPriority">0</span>
+                        <span class="stat-label">High Priority</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="peopleAffected">0</span>
+                        <span class="stat-label">People Affected</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="activeActions">0</span>
+                        <span class="stat-label">Active Actions</span>
+                    </div>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label class="filter-label">Priority:</label>
+                        <select class="filter-select" id="priorityFilter">
+                            <option value="">All Priorities</option>
+                            <option value="high">High Priority</option>
+                            <option value="medium">Medium Priority</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Location:</label>
+                        <select class="filter-select" id="locationFilter">
+                            <option value="">All Locations</option>
+                            <option value="Mount Isa">Mount Isa</option>
+                            <option value="Mornington Island">Mornington Island</option>
+                            <option value="Normanton">Normanton</option>
+                            <option value="Doomadgee">Doomadgee</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Status:</label>
+                        <select class="filter-select" id="statusFilter">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="addressed">Addressed</option>
+                            <option value="in_progress">In Progress</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Gaps Grid -->
+                <div class="gaps-grid" id="gapsContainer">
+                    <!-- Service gaps will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Global state
+        let allGaps = [];
+        let filteredGaps = [];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadGaps();
+            setupFilters();
+            displayGaps();
+        });
+
+        // Load gaps from API
+        async function loadGaps() {
+            try {
+                const response = await fetch('/api/engagement/gaps');
+                allGaps = await response.json();
+                updateStats();
+            } catch (error) {
+                console.error('Error loading gaps:', error);
+                showErrorState();
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            const totalGaps = allGaps.length;
+            const highPriority = allGaps.filter(gap => gap.severity_score >= 8).length;
+            const peopleAffected = allGaps.reduce((sum, gap) => sum + (gap.people_affected_estimate || 0), 0);
+
+            document.getElementById('totalGaps').textContent = totalGaps;
+            document.getElementById('highPriority').textContent = highPriority;
+            document.getElementById('peopleAffected').textContent = peopleAffected.toLocaleString();
+            document.getElementById('activeActions').textContent = '0'; // Would come from actions API
+        }
+
+        // Setup filter event listeners
+        function setupFilters() {
+            ['priorityFilter', 'locationFilter', 'statusFilter'].forEach(filterId => {
+                document.getElementById(filterId).addEventListener('change', applyFilters);
+            });
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const priority = document.getElementById('priorityFilter').value;
+            const location = document.getElementById('locationFilter').value;
+            const status = document.getElementById('statusFilter').value;
+
+            filteredGaps = allGaps.filter(gap => {
+                // Priority filter
+                if (priority) {
+                    const gapPriority = getPriorityLevel(gap.severity_score);
+                    if (gapPriority !== priority) return false;
+                }
+
+                // Location filter
+                if (location && gap.location_name !== location) return false;
+
+                // Status filter
+                if (status && gap.status !== status) return false;
+
+                return true;
+            });
+
+            displayGaps();
+        }
+
+        // Display gaps
+        function displayGaps() {
+            const gapsToShow = filteredGaps.length > 0 ? filteredGaps : allGaps;
+            
+            if (gapsToShow.length === 0) {
+                showEmptyState();
+                return;
+            }
+
+            renderGaps(gapsToShow);
+        }
+
+        // Render gaps
+        function renderGaps(gaps) {
+            const container = document.getElementById('gapsContainer');
+            
+            const html = gaps.map(gap => {
+                const priorityLevel = getPriorityLevel(gap.severity_score);
+                const priorityClass = `priority-${priorityLevel}`;
+                const priorityLabel = priorityLevel.charAt(0).toUpperCase() + priorityLevel.slice(1);
+                
+                return `
+                    <div class="gap-card ${priorityClass}">
+                        <div class="gap-header">
+                            <h3 class="gap-title">${gap.service_type}</h3>
+                            <span class="priority-badge ${priorityClass}">${priorityLabel} Priority</span>
+                        </div>
+                        
+                        <p class="gap-description">${gap.description}</p>
+                        
+                        <div class="gap-meta">
+                            <div class="meta-item">
+                                <i class="bi bi-geo-alt"></i>
+                                ${gap.location_name}
+                            </div>
+                            <div class="meta-item">
+                                <i class="bi bi-people"></i>
+                                ${gap.people_affected_estimate}+ people affected
+                            </div>
+                            <div class="meta-item">
+                                <i class="bi bi-speedometer"></i>
+                                Severity: ${gap.severity_score}/10
+                            </div>
+                            <div class="meta-item">
+                                <i class="bi bi-flag"></i>
+                                Status: ${gap.status}
+                            </div>
+                        </div>
+                        
+                        <div class="gap-actions">
+                            <a href="#" class="btn btn-primary" onclick="viewGapDetails('${gap.id}')">
+                                <i class="bi bi-eye"></i>
+                                View Details
+                            </a>
+                            <a href="actions.html?gap=${gap.id}" class="btn btn-outline">
+                                <i class="bi bi-plus-circle"></i>
+                                Create Action
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = html;
+        }
+
+        // Helper functions
+        function getPriorityLevel(score) {
+            if (score >= 8) return 'high';
+            if (score >= 5) return 'medium';
+            return 'low';
+        }
+
+        function viewGapDetails(gapId) {
+            const gap = allGaps.find(g => g.id === gapId);
+            if (gap) {
+                alert(`Gap Details:\n\nService Type: ${gap.service_type}\nLocation: ${gap.location_name}\nDescription: ${gap.description}\nSeverity: ${gap.severity_score}/10\nPeople Affected: ${gap.people_affected_estimate}+`);
+            }
+        }
+
+        // Show empty state
+        function showEmptyState() {
+            document.getElementById('gapsContainer').innerHTML = `
+                <div class="empty-state">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <h3>No service gaps found</h3>
+                    <p>No service gaps match your current filters, or none have been identified yet.</p>
+                </div>
+            `;
+        }
+
+        // Show error state
+        function showErrorState() {
+            document.getElementById('gapsContainer').innerHTML = `
+                <div class="empty-state">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <h3>Unable to load service gaps</h3>
+                    <p>Please check your connection and try again.</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

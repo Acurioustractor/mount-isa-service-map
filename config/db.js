@@ -12,15 +12,24 @@ const pool = new Pool({
   port: process.env.DB_PORT || 5432,
 });
 
-// Test database connection
-pool.query('SELECT NOW()', (err, res) => {
+// Test database connection (non-blocking)
+pool.connect((err, client, release) => {
   if (err) {
-    console.error('Database connection error:', err.stack);
+    console.error('Database connection error:', err.message);
+    console.log('Application will continue without database');
   } else {
     console.log('Database connected successfully');
+    release();
   }
 });
 
 module.exports = {
-  query: (text, params) => pool.query(text, params),
+  query: async (text, params) => {
+    try {
+      return await pool.query(text, params);
+    } catch (error) {
+      console.error('Database query error:', error.message);
+      throw error;
+    }
+  },
 };

@@ -1,14 +1,6 @@
 const express = require('express');
-const { Pool } = require('pg');
+const db = require('../config/db');
 const router = express.Router();
-
-// Database connection
-const db = new Pool({
-    host: process.env.DB_HOST || 'localhost',
-    database: process.env.DB_NAME || 'mount_isa_services',
-    user: process.env.DB_USER || 'benknight',
-    port: process.env.DB_PORT || '5432'
-});
 
 // Get all services with enhanced discovery metadata
 router.get('/', async (req, res) => {

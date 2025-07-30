@@ -1,16 +1,27 @@
-# Mount Isa Service Map
+# Mount Isa Community Platform
 
-A community-led service mapping platform for Mount Isa with storytelling timeline and AI-powered community voice analysis. This platform centers Aboriginal perspectives and ensures community voices drive the conversation about services and needs.
+> *"Don't fly in and fly out and think you're going to solve problems. We need services that our people can trust and programs that are here when we need them."*  
+> — **Roslyn Von Senden**, Traditional Owner & Community Leader
 
-## Overview
+**A community-led technology platform transforming how services are discovered, accessed, and improved on Kalkadoon Country.**
 
-This project provides a comprehensive platform for Mount Isa and Lower Gulf communities that includes:
+This isn't just another service directory—it's a fundamental shift toward **community-controlled research** and **Indigenous data sovereignty**. Built with and by the people of Mount Isa, this platform combines traditional knowledge systems with cutting-edge AI to tell our own story and drive real change.
 
-- **Welcome Experience**: Rich introduction to Mount Isa's Aboriginal heritage and community-led approach
-- **Story Timeline**: Interactive journey through community transformation with expandable cards
-- **Service Directory**: Comprehensive mapping of 44+ community services with intelligent discovery
-- **Community Voice System**: AI-powered analysis of resident interviews and feedback
-- **Cultural Priority**: Aboriginal and Torres Strait Islander perspectives centered throughout
+🌐 **[Live Platform](https://mount-isa-service-map.vercel.app)** | 📊 **[Platform Overview](https://mount-isa-service-map.vercel.app/overview.html)** | 🎤 **[Community Dashboard](https://mount-isa-service-map.vercel.app/engagement/dashboard.html)**
+
+## Why This Platform Exists
+
+For decades, remote communities like Mount Isa have been **studied by outsiders** rather than empowered to **tell their own story**. This platform represents a breakthrough—putting **community voices at the center** of understanding service needs while celebrating the strengths that already exist on Country.
+
+### **Built on Kalkadoon Country**
+Mount Isa sits on the traditional lands of the Kalkadoon people, who have maintained connection to this country for over **60,000 years**. Every feature of this platform reflects our values: *community-led*, *culturally-centered*, and *built to last*.
+
+### **Community-Controlled Technology**
+- 🎤 **127+ community interviews** processed with AI-powered analysis
+- 🗺️ **880% service growth** from 5 to 44+ mapped services  
+- 🏞️ **Indigenous data sovereignty** with community ownership of insights
+- 📊 **Real-time service discovery** serving 19,000+ residents across the Gulf region
+- ⭐ **Cultural protocols integrated** throughout platform design
 
 ## Key Features
 
@@ -77,8 +88,14 @@ mount-isa-service-map/
 
 ## Quick Start
 
-### Live Demo
-Visit the deployed application: [Mount Isa Service Map](https://your-vercel-url.vercel.app)
+### Live Platform
+🌐 **[Mount Isa Community Platform](https://mount-isa-service-map.vercel.app)**
+
+Experience the full platform including:
+- Interactive service mapping and discovery
+- Community voice dashboard with AI insights  
+- Story timeline of community transformation
+- Cultural protocols and Indigenous-centered design
 
 ### Local Installation
 
@@ -129,7 +146,7 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for complete instructions on deploying to Git
 3. Set environment variables
 4. Deploy automatically
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-username/mount-isa-service-map)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Acurioustractor/mount-isa-service-map)
 
 ## API Endpoints
 
