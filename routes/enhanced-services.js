@@ -1,5 +1,5 @@
 const express = require('express');
-const db = require('../config/db');
+const { supabase } = require('../config/supabase');
 const router = express.Router();
 
 // Get all services with enhanced discovery metadata

@@ -63,13 +63,13 @@ app.get('/test', (req, res) => {
   res.status(200).send('Test endpoint working!');
 });
 
-// API Routes
-app.use('/api/services', require('./routes/enhanced-services'));
-app.use('/api/categories', require('./routes/categories'));
-app.use('/api/search', require('./routes/search'));
-app.use('/api/admin', require('./routes/admin'));
-app.use('/api/engagement', require('./routes/engagement'));
-app.use('/api/scraping', require('./routes/scraping'));
+// API Routes - Use Supabase routes
+app.use('/api/services', require('./routes/supabase-services'));
+app.use('/api/categories', require('../routes/categories'));
+app.use('/api/search', require('../routes/search'));
+app.use('/api/admin', require('../routes/admin'));
+app.use('/api/engagement', require('../routes/engagement'));
+app.use('/api/scraping', require('../routes/scraping'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
