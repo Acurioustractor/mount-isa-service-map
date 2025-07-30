@@ -266,6 +266,136 @@
             margin-bottom: 0.5rem;
         }
 
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .service-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .service-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .service-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .service-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .service-meta {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .service-badge {
+            background: #f3f4f6;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .service-badge.category {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .service-badge.confidence {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .service-contact {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .service-contact i {
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .map-preview-container {
+            margin-top: 2rem;
+        }
+
+        .map-placeholder {
+            height: 400px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255,255,255,0.1) 2px, transparent 2px),
+                radial-gradient(circle at 60% 70%, rgba(255,255,255,0.1) 1px, transparent 1px),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 1.5px, transparent 1.5px),
+                radial-gradient(circle at 40% 80%, rgba(255,255,255,0.1) 1px, transparent 1px);
+        }
+
+        .map-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            max-width: 500px;
+            padding: 2rem;
+        }
+
+        .map-overlay h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .map-overlay p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .map-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .map-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .map-feature i {
+            font-size: 1.2rem;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
@@ -286,6 +416,22 @@
             
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .map-features {
+                grid-template-columns: 1fr;
+            }
+
+            .map-overlay {
+                padding: 1rem;
+            }
+
+            .map-placeholder {
+                height: 300px;
             }
         }
     </style>
@@ -419,7 +565,7 @@
                     <div class="stat-label">Community Interviews</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">44+</div>
+                    <div class="stat-number" id="services-count">Loading...</div>
                     <div class="stat-label">Services Discovered</div>
                 </div>
                 <div class="stat-item">
@@ -437,6 +583,63 @@
                 <div class="stat-item">
                     <div class="stat-number">60,000+</div>
                     <div class="stat-label">Years on Country</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Services Preview -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Live Services in Our Community</h2>
+            <div class="services-preview">
+                <div id="services-loading" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                    <i class="bi bi-hourglass-split" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                    Loading live services data...
+                </div>
+                <div id="services-container" class="services-grid" style="display: none;"></div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="/" class="btn btn-primary">
+                        <i class="bi bi-arrow-right"></i>
+                        View All Services & Interactive Map
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Map Preview -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Service Locations Across Mount Isa</h2>
+            <div class="map-preview-container">
+                <div class="map-placeholder">
+                    <div class="map-overlay">
+                        <h3>Interactive Service Map</h3>
+                        <p>Explore 44+ services across Mount Isa and the Gulf region with our full-screen interactive map</p>
+                        <div class="map-features">
+                            <div class="map-feature">
+                                <i class="bi bi-geo-alt-fill"></i>
+                                <span>GPS Coordinates</span>
+                            </div>
+                            <div class="map-feature">
+                                <i class="bi bi-layers-fill"></i>
+                                <span>Service Clustering</span>
+                            </div>
+                            <div class="map-feature">
+                                <i class="bi bi-funnel-fill"></i>
+                                <span>Category Filtering</span>
+                            </div>
+                            <div class="map-feature">
+                                <i class="bi bi-fullscreen"></i>
+                                <span>Fullscreen Mode</span>
+                            </div>
+                        </div>
+                        <a href="/#map" class="btn btn-primary">
+                            <i class="bi bi-map"></i>
+                            Launch Interactive Map
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -497,5 +700,70 @@
             </div>
         </div>
     </section>
+
+    <script>
+        // Fetch and display real services data
+        async function loadServicesData() {
+            try {
+                // Fetch services from API
+                const response = await fetch('/api/services?limit=6');
+                const services = await response.json();
+                
+                // Update services count
+                document.getElementById('services-count').textContent = services.length + '+';
+                
+                // Show services
+                displayServices(services.slice(0, 6)); // Show first 6 services
+                
+            } catch (error) {
+                console.error('Error loading services:', error);
+                document.getElementById('services-loading').innerHTML = `
+                    <i class="bi bi-exclamation-circle" style="font-size: 2rem; margin-bottom: 1rem; display: block; color: #dc2626;"></i>
+                    <p>Unable to load live services data. <a href="/" style="color: var(--primary-color);">Visit the main platform</a> to explore all services.</p>
+                `;
+            }
+        }
+
+        function displayServices(services) {
+            const container = document.getElementById('services-container');
+            const loading = document.getElementById('services-loading');
+            
+            if (!services || services.length === 0) {
+                loading.innerHTML = `
+                    <i class="bi bi-info-circle" style="font-size: 2rem; margin-bottom: 1rem; display: block; color: var(--primary-color);"></i>
+                    <p>No services data available. <a href="/" style="color: var(--primary-color);">Visit the main platform</a> to explore all services.</p>
+                `;
+                return;
+            }
+
+            // Hide loading, show container
+            loading.style.display = 'none';
+            container.style.display = 'grid';
+            
+            // Generate service cards
+            container.innerHTML = services.map(service => `
+                <div class="service-card">
+                    <div class="service-name">${service.name}</div>
+                    <div class="service-description">
+                        ${service.description ? service.description.substring(0, 120) + '...' : 'Community service providing support to Mount Isa residents.'}
+                    </div>
+                    <div class="service-meta">
+                        ${service.category ? `<span class="service-badge category">${service.category}</span>` : ''}
+                        ${service.confidence_score ? `<span class="service-badge confidence">${Math.round(service.confidence_score * 100)}% Confidence</span>` : ''}
+                        ${service.data_source ? `<span class="service-badge">${service.data_source}</span>` : ''}
+                    </div>
+                    ${service.phone || service.email ? `
+                        <div class="service-contact">
+                            ${service.phone ? `<div><i class="bi bi-phone"></i>${service.phone}</div>` : ''}
+                            ${service.email ? `<div><i class="bi bi-envelope"></i>${service.email}</div>` : ''}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Load services when page loads
+        document.addEventListener('DOMContentLoaded', loadServicesData);
+    </script>
 </body>
 </html>
