@@ -1851,7 +1851,7 @@
                                         <div class="stat-label">Residents served</div>
                                     </div>
                                     <div class="stat-item">
-                                        <div class="stat-number">44+</div>
+                                        <div class="stat-number">109</div>
                                         <div class="stat-label">Community services</div>
                                     </div>
                                 </div>
@@ -1878,7 +1878,7 @@
                                     <div class="feature-item">
                                         <i class="bi bi-search"></i>
                                         <h3>Service Discovery</h3>
-                                        <p>Comprehensive mapping growing from 5 to 44+ services through intelligent automation</p>
+                                        <p>Comprehensive mapping growing from 5 to 109 services through intelligent automation</p>
                                     </div>
                                     <div class="feature-item">
                                         <i class="bi bi-clock-history"></i>
@@ -1984,31 +1984,12 @@
                         
                         <!-- Map Controls -->
                         <div class="map-controls">
-                            <div class="map-filters">
+                            <div class="map-filters" id="mapFilters">
                                 <button class="map-filter-btn active" data-map-filter="all">
                                     <i class="bi bi-geo-alt"></i>
                                     All Services
                                 </button>
-                                <button class="map-filter-btn" data-map-filter="health">
-                                    <i class="bi bi-heart-pulse"></i>
-                                    Health
-                                </button>
-                                <button class="map-filter-btn" data-map-filter="disability">
-                                    <i class="bi bi-heart"></i>
-                                    Disability
-                                </button>
-                                <button class="map-filter-btn" data-map-filter="youth">
-                                    <i class="bi bi-people"></i>
-                                    Youth
-                                </button>
-                                <button class="map-filter-btn" data-map-filter="housing">
-                                    <i class="bi bi-house"></i>
-                                    Housing
-                                </button>
-                                <button class="map-filter-btn" data-map-filter="indigenous">
-                                    <i class="bi bi-heart-fill"></i>
-                                    Indigenous
-                                </button>
+                                <!-- Dynamic filters will be populated here -->
                             </div>
                             
                             <div class="map-view-controls">
@@ -2236,7 +2217,7 @@
                                 </div>
                                 <div class="stat-card">
                                     <h3>Service Coverage</h3>
-                                    <div class="stat-number">44</div>
+                                    <div class="stat-number">109</div>
                                     <p>Services with feedback</p>
                                 </div>
                             </div>
@@ -2349,8 +2330,8 @@
                     <div class="system-stats">
                         <div class="stat-card">
                             <h3>Total Services Discovered</h3>
-                            <div class="stat-number">44</div>
-                            <p>880% increase from original 5</p>
+                            <div class="stat-number">109</div>
+                            <p>2080% increase from original 5</p>
                         </div>
                         <div class="stat-card">
                             <h3>Discovery Sources</h3>
@@ -2431,6 +2412,11 @@
                 allServices = await response.json();
                 calculateServiceCounts();
                 updateSidebarCounts();
+                
+                // Populate map filters after loading services
+                if (document.getElementById('mapFilters')) {
+                    populateMapFilters();
+                }
             } catch (error) {
                 console.error('Error loading services:', error);
                 showErrorState();
@@ -2465,9 +2451,9 @@ This success stems from integrated prevention programs including the Early Actio
                     date: 'November 2024',
                     theme: 'discovery',
                     type: 'success',
-                    title: 'AI-Powered Service Discovery: From 5 to 44 Services',
+                    title: 'AI-Powered Service Discovery: From 5 to 109 Services',
                     preview: 'Breakthrough in community service mapping achieved 880% increase through intelligent automation and community engagement.',
-                    body: `What started as a simple directory of 5 basic services has transformed into a comprehensive ecosystem map of 44 community services. This 880% increase was achieved through innovative AI-powered discovery methods:
+                    body: `What started as a simple directory of 5 basic services has transformed into a comprehensive ecosystem map of 109 community services. This 2080% increase was achieved through innovative AI-powered discovery methods:
 
 • **Queensland Government Services** (8 services, 98% confidence)
 • **Indigenous HealthInfoNet** (8 culturally appropriate services)  
@@ -2477,8 +2463,8 @@ This success stems from integrated prevention programs including the Early Actio
 
 Each service includes discovery metadata, confidence scores, and source information to ensure transparency and accuracy.`,
                     stats: [
-                        { number: '44', label: 'Total Services' },
-                        { number: '880%', label: 'Increase from Original' },
+                        { number: '109', label: 'Total Services' },
+                        { number: '2080%', label: 'Increase from Original' },
                         { number: '8', label: 'Discovery Sources' },
                         { number: '91%', label: 'Average Confidence' }
                     ],
@@ -3324,7 +3310,7 @@ Corina James added: "Don't fly in and fly out and think you're going to solve pr
                     <div class="dashboard-stats">
                         <div class="stat-card">
                             <h3>Total Services</h3>
-                            <div class="stat-number">${stats.total_services || 44}</div>
+                            <div class="stat-number">${stats.total_services || 109}</div>
                             <p>Services discovered across all sources</p>
                         </div>
                         <div class="stat-card">
@@ -3335,7 +3321,7 @@ Corina James added: "Don't fly in and fly out and think you're going to solve pr
                         <div class="stat-card">
                             <h3>Increase from Original</h3>
                             <div class="stat-number">880%</div>
-                            <p>From 5 to 44 services</p>
+                            <p>From 5 to 109 services</p>
                         </div>
                     </div>
                     
@@ -3518,11 +3504,10 @@ Corina James added: "Don't fly in and fly out and think you're going to solve pr
         // Get category icon
         function getCategoryIcon(category) {
             const icons = {
-                'health': '<i class="bi bi-heart-pulse"></i>',
-                'disability': '<i class="bi bi-heart"></i>',
-                'youth': '<i class="bi bi-people"></i>',
-                'housing': '<i class="bi bi-house"></i>',
-                'indigenous': '<i class="bi bi-heart-fill"></i>',
+                'Health Services': '<i class="bi bi-heart-pulse"></i>',
+                'Mental Health': '<i class="bi bi-brain"></i>',
+                'Youth Support': '<i class="bi bi-people"></i>',
+                'Community Support': '<i class="bi bi-heart-fill"></i>',
                 'other': '<i class="bi bi-geo-alt"></i>'
             };
             return icons[category] || icons.other;
@@ -3530,13 +3515,34 @@ Corina James added: "Don't fly in and fly out and think you're going to solve pr
 
         // Determine category from service data
         function getCategoryFromService(service) {
-            const category = service.category?.toLowerCase() || '';
-            if (category.includes('health') || category.includes('medical')) return 'health';
-            if (category.includes('disability') || category.includes('ndis')) return 'disability';
-            if (category.includes('youth') || category.includes('young')) return 'youth';
-            if (category.includes('housing') || category.includes('accommodation')) return 'housing';
-            if (category.includes('indigenous') || category.includes('aboriginal')) return 'indigenous';
-            return 'other';
+            return service.category || 'Community Support';
+        }
+
+        // Populate map filters dynamically based on available categories
+        function populateMapFilters() {
+            const categories = [...new Set(allServices.map(service => service.category))].filter(Boolean);
+            const filtersContainer = document.getElementById('mapFilters');
+            
+            // Keep the "All Services" button and clear other filters
+            const allButton = filtersContainer.querySelector('[data-map-filter="all"]');
+            filtersContainer.innerHTML = '';
+            filtersContainer.appendChild(allButton);
+            
+            // Add dynamic category filters
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                button.className = 'map-filter-btn';
+                button.setAttribute('data-map-filter', category);
+                
+                // Set appropriate icon based on category
+                const icon = getCategoryIcon(category);
+                button.innerHTML = `${icon} ${category}`;
+                
+                filtersContainer.appendChild(button);
+            });
+            
+            // Reattach event listeners
+            setupMapEventListeners();
         }
 
         // Create marker popup content
@@ -3590,6 +3596,11 @@ Corina James added: "Don't fly in and fly out and think you're going to solve pr
 
         // Setup map event listeners
         function setupMapEventListeners() {
+            // Remove existing event listeners first
+            document.querySelectorAll('.map-filter-btn').forEach(btn => {
+                btn.replaceWith(btn.cloneNode(true));
+            });
+            
             // Filter button event listeners
             document.querySelectorAll('.map-filter-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
