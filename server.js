@@ -33,8 +33,8 @@ app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files from frontend directory
-app.use(express.static('frontend'));
+// Serve static files from public directory
+app.use(express.static('public'));
 
 // Routes
 app.get('/', (req, res) => {
@@ -64,7 +64,7 @@ app.get('/test', (req, res) => {
 });
 
 // API Routes
-app.use('/api/services', require('./routes/enhanced-services'));
+app.use('/api/services', require('./routes/simple-services'));
 app.use('/api/categories', require('./routes/categories'));
 app.use('/api/search', require('./routes/search'));
 app.use('/api/admin', require('./routes/admin'));

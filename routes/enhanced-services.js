@@ -100,11 +100,37 @@ router.get('/', async (req, res) => {
         query += ` ORDER BY s.confidence_score DESC, s.discovery_date DESC LIMIT $${++paramCount}`;
         params.push(limit);
 
-        const result = await db.query(query, params);
+        // Convert to Supabase query
+        const { data: services, error } = await supabase
+            .from('services')
+            .select(`
+                id,
+                name,
+                description,
+                address,
+                suburb,
+                postcode,
+                state,
+                phone,
+                email,
+                website,
+                data_source,
+                confidence_score,
+                research_metadata,
+                discovery_date,
+                last_updated,
+                is_active,
+                service_categories(name)
+            `)
+            .eq('is_active', active === 'true' || active === true)
+            .limit(parseInt(limit));
+
+        if (error) throw error;
         
         // Enhance results with discovery source information
-        const enhancedResults = result.rows.map(service => ({
+        const enhancedResults = (services || []).map(service => ({
             ...service,
+            category: service.service_categories?.name || 'Community Support',
             research_metadata: typeof service.research_metadata === 'string' 
                 ? JSON.parse(service.research_metadata) 
                 : service.research_metadata || {},
@@ -149,13 +175,22 @@ router.get('/:id', async (req, res) => {
             WHERE s.id = $1
         `;
         
-        const result = await db.query(query, [id]);
+        const { data: services, error } = await supabase
+            .from('services')
+            .select(`
+                *,
+                service_categories(name)
+            `)
+            .eq('id', id)
+            .single();
+
+        if (error) throw error;
         
-        if (result.rows.length === 0) {
+        if (!services) {
             return res.status(404).json({ error: 'Service not found' });
         }
         
-        const service = result.rows[0];
+        const service = services;
         const metadata = typeof service.research_metadata === 'string' 
             ? JSON.parse(service.research_metadata) 
             : service.research_metadata || {};
@@ -207,10 +242,39 @@ router.get('/stats/discovery', async (req, res) => {
             ORDER BY count DESC
         `;
 
-        const [statsResult, categoryResult] = await Promise.all([
-            db.query(statsQuery),
-            db.query(categoryQuery)
-        ]);
+        // Get total count and basic stats
+        const { count: totalCount } = await supabase
+            .from('services')
+            .select('*', { count: 'exact', head: true })
+            .eq('is_active', true);
+
+        const { data: allServices } = await supabase
+            .from('services')
+            .select('data_source, confidence_score, discovery_date')
+            .eq('is_active', true);
+
+        // Group by data source
+        const bySource = {};
+        allServices?.forEach(service => {
+            const source = service.data_source || 'manual';
+            if (!bySource[source]) {
+                bySource[source] = { count: 0, confidenceSum: 0, latestDate: null };
+            }
+            bySource[source].count++;
+            bySource[source].confidenceSum += service.confidence_score || 0;
+            if (!bySource[source].latestDate || service.discovery_date > bySource[source].latestDate) {
+                bySource[source].latestDate = service.discovery_date;
+            }
+        });
+
+        const statsResult = { rows: Object.entries(bySource).map(([source, data]) => ({
+            data_source: source,
+            count: data.count,
+            avg_confidence: data.count > 0 ? data.confidenceSum / data.count : 0,
+            latest_discovery: data.latestDate
+        }))};
+
+        const categoryResult = { rows: [{ category: 'general', count: totalCount }] };
 
         const stats = {
             total_services: statsResult.rows.reduce((sum, row) => sum + parseInt(row.count || 0), 0),

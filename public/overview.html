@@ -492,7 +492,7 @@
                     <h3 class="capability-title">Intelligent Service Discovery</h3>
                     <p class="capability-description">Automated discovery and cataloging of community services with quality assurance</p>
                     <ul class="capability-features">
-                        <li>2080% growth from 5 to 109 services</li>
+                        <li>298% growth from 46 to 183 services</li>
                         <li>Multi-source web scraping and validation</li>
                         <li>Real-time service information updates</li>
                         <li>Confidence scoring for data quality</li>
@@ -569,7 +569,7 @@
                     <div class="stat-label">Services Discovered</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">2080%</div>
+                    <div class="stat-number">298%</div>
                     <div class="stat-label">Service Growth</div>
                 </div>
                 <div class="stat-item">
@@ -616,7 +616,7 @@
                 <div class="map-placeholder">
                     <div class="map-overlay">
                         <h3>Interactive Service Map</h3>
-                        <p>Explore 109 services across Mount Isa and the Gulf region with our full-screen interactive map</p>
+                        <p>Explore 183 services across Mount Isa and the Gulf region with our full-screen interactive map</p>
                         <div class="map-features">
                             <div class="map-feature">
                                 <i class="bi bi-geo-alt-fill"></i>
@@ -656,7 +656,7 @@
                 
                 <div class="impact-grid">
                     <div class="impact-item">
-                        <div class="impact-number">5→109</div>
+                        <div class="impact-number">46→183</div>
                         <h4>Services Mapped</h4>
                         <p>From a handful of known services to comprehensive community resource mapping</p>
                     </div>
@@ -705,12 +705,16 @@
         // Fetch and display real services data
         async function loadServicesData() {
             try {
-                // Fetch services from API
+                // Fetch total count
+                const countResponse = await fetch('/api/services/count');
+                const countData = await countResponse.json();
+                
+                // Fetch services for display
                 const response = await fetch('/api/services?limit=6');
                 const services = await response.json();
                 
-                // Update services count
-                document.getElementById('services-count').textContent = services.length + '+';
+                // Update services count with actual total
+                document.getElementById('services-count').textContent = countData.count;
                 
                 // Show services
                 displayServices(services.slice(0, 6)); // Show first 6 services
